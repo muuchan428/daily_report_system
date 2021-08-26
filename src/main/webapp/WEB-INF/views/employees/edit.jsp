@@ -38,4 +38,4 @@
             <a href="<c:url value='?action=${action}&command=${commIdx}' />">一覧に戻る</a>
         </p>
     </c:param>
-</c:import>l>
+</c:import>

@@ -16,13 +16,13 @@ public enum AttributeConst {
 
     //入力フォーム共通
     TOKEN("_token"),
-    ERR("errows"),
+    ERR("errors"),
 
     //ログイン中の従業員
     LOGIN_EMP("login_employee"),
 
     //ログイン画面
-    LOGIN_ERR("koginError"),
+    LOGIN_ERR("loginError"),
 
     //従業員管理
     EMPLOYEE("employee"),
