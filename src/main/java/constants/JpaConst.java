@@ -57,6 +57,7 @@ public interface JpaConst {
         String JPQL_PARM_CODE = "code"; //社員番号
         String JPQL_PARM_PASSWORD = "password"; //パスワード
         String JPQL_PARM_EMPLOYEE = "employee"; //従業員
+        String JPQL_PARM_FOLLOW = "follow_employee";//フォローされた従業員
 
         //NamedQueryの nameとquery
         //全ての従業員をidの降順に取得する
@@ -83,5 +84,22 @@ public interface JpaConst {
         //指定した従業員が作成した日報の件数を取得する
         String Q_REP_COUNT_ALL_MINE = ENTITY_REP + ".countAllMine";
         String Q_REP_COUNT_ALL_MINE_DEF = "SELECT COUNT(r) FROM Report AS r WHERE r.employee = :" + JPQL_PARM_EMPLOYEE;
-
+        //指定した従業員のフォロー一覧を全件idの降順で取得する
+        String Q_FOL_GET_ALL_MINE = ENTITY_FOL  + ".getAllMine";
+        String Q_FOL_GET_ALL_MINE_DEF = "SELECT f.follow_employee FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " ORDER BY f.id DESC";
+      //指定した従業員のフォロー件数を取得する
+        String Q_FOL_COUNT_ALL_MINE = ENTITY_FOL + ".countAllMine";
+        String Q_FOL_COUNT_ALL_MINE_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee IN  (" + Q_FOL_GET_ALL_MINE_DEF + ")";
+      //指定した従業員のフォローしている従業員の日報を全件idの降順で取得する
+        String Q_REP_GET_ALL_FOL = ENTITY_REP + ".getAllFollow";
+        String Q_REP_GET_ALL_FOL_DEF = "SELECT r FROM Report AS r WHERE r.employee IN ("+ Q_FOL_GET_ALL_MINE_DEF + ")";
+        //指定した従業員のフォローしている従業員の日報の件数を取得する
+        String Q_REP_COUNT_ALL_FOL = ENTITY_REP + ".countAllFollow";
+        String Q_REP_COUNT_ALL_FOL_DEF = "SELECT COUNT(r) FROM Report AS r WHERE r.employee  IN ("+ Q_FOL_GET_ALL_MINE_DEF + ")";
+       //指定した従業員のフォローしている従業員を全件idの降順で取得する
+        String Q_EMP_GET_ALL_FOL = ENTITY_EMP + ".getAllFollow";
+        String Q_EMP_GET_ALL_FOL_DEF = "SELECT e FROM Employee AS e WHERE e.employee IN(" + Q_FOL_GET_ALL_MINE_DEF + ") ORder BY e.id DESC";
+        //指定した従業員のフォローを解除するデータを取得する
+        String Q_FOL_REMOVE_FOL_EMP = ENTITY_EMP + "deleteFollowEmployee";
+        String Q_FOL_REMOVE_FOL_EMP_DEF = "SELECT f  FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.follow_employee = :" + JPQL_PARM_FOLLOW;
 }
