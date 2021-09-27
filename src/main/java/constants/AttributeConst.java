@@ -56,7 +56,8 @@ public enum AttributeConst {
     FOLLOWS("follows"),
     FOL_COUNT("follow_count"),
     FOL_ID("id"),
-    FOL_EMP_ID("follow_employee");
+    FOL_EMP_ID("follow_employee"),
+    FOL_CHECK("follow_check");
 
 
     private final String text;
