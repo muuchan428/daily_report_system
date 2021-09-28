@@ -81,7 +81,7 @@ import services.ReportService;
          * @throws ServletException
          * @throws IOException
          */
-        public void edit() throws ServletException, IOException {
+        public void show() throws ServletException, IOException {
 
           //セッションからログイン中の従業員情報を取得
             EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
@@ -108,7 +108,7 @@ import services.ReportService;
 
 
             //一覧画面を表示
-            forward(ForwardConst.FW_FOL_EDIT);
+            forward(ForwardConst.FW_FOL_SHOW);
         }
 
         /**
@@ -133,40 +133,22 @@ import services.ReportService;
                 f_service.removeFollowEmployee(loginEmployee, f_ev);
 
                 //セッションに削除完了のフラッシュメッセージを設定
-                putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED.getMessage());
+                putSessionScope(AttributeConst.FLUSH, MessageConst.I_REMOVED.getMessage());
 
                 //一覧画面にリダイレクト
-                redirect(ForwardConst.ACT_FOL, ForwardConst.CMD_EDIT);
+                redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_SHOW, f_ev.getId());
             }
         }
 
-        /**
-         * フォローされているかのチェックを行う
-         * @return
-         * @throws ServletException
-         * @throws IOException
-         */
-        public Boolean checkFollow() throws ServletException, IOException{
 
-                //セッションからログイン中の従業員情報を取得
-                EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
-
-                //idを条件に従業員データを取得する
-                EmployeeView f_ev = e_service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
-
-                //フォローされているかの確認を行う
-                Boolean checkFollow = f_service.checkFollow(ev, f_ev);
-
-                return checkFollow;
-
-        }
         /**
              * フォローを行う
              * @throws ServletException
              * @throws IOException
              */
-            public void entrynew() throws ServletException, IOException {
+            public void create() throws ServletException, IOException {
 
+                //CSRF対策 tokenのチェック
                 if (checkToken()) {
 
                     //セッションからログイン中の従業員情報を取得
@@ -184,13 +166,13 @@ import services.ReportService;
                     f_service.create(fv);
 
                     //セッションに登録完了のフラッシュメッセージを設定
-                    putSessionScope(AttributeConst.FLUSH, MessageConst.I_REGISTERED.getMessage());
+                    putSessionScope(AttributeConst.FLUSH, MessageConst.I_FOLLOWED.getMessage());
 
                     //従業員詳細にリダイレクト
-                    redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_SHOW);
+                    redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_SHOW, f_ev.getId());
+
+
                 }
-
-
             }
 
 

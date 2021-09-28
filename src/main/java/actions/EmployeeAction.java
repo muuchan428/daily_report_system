@@ -12,6 +12,7 @@ import constants.JpaConst;
 import constants.MessageConst;
 import constants.PropertyConst;
 import services.EmployeeService;
+import services.FollowService;
 
 /**
  * 従業員に関わる処理を行うActionクラス
@@ -20,6 +21,7 @@ import services.EmployeeService;
 public class EmployeeAction extends ActionBase {
 
     private EmployeeService service;
+    private FollowService followService;
 
     /**
      * メソッドを実行する
@@ -28,11 +30,14 @@ public class EmployeeAction extends ActionBase {
     public void process() throws ServletException, IOException {
 
         service = new EmployeeService();
+        followService = new FollowService();
+
 
         //メソッドを実行
         invoke();
 
         service.close();
+        followService.close();
     }
 
     /**
@@ -147,7 +152,9 @@ public class EmployeeAction extends ActionBase {
      */
     public void show() throws ServletException, IOException {
 
-        if(checkAdmin()) {
+
+            //セッションからログイン中の従業員情報を取得
+            EmployeeView loginEmployee = (EmployeeView)getSessionScope(AttributeConst.LOGIN_EMP);
 
         //idを条件に従業員データを取得する
         EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
@@ -159,16 +166,24 @@ public class EmployeeAction extends ActionBase {
             return;
         }
         //ログインしている従業員からフォローされているかのチェック
-        FollowAction follow = new FollowAction();
-        Boolean checkFollow = follow.checkFollow();
+        Boolean checkFollow = followService.checkFollow(loginEmployee, ev);
 
+        putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+        putRequestScope(AttributeConst.LOGIN_EMP,loginEmployee);//ログインしている従業員情報
         putRequestScope(AttributeConst.EMPLOYEE, ev); //取得した従業員情報
         putRequestScope(AttributeConst.FOL_CHECK, checkFollow);//フォローされているかの情報
+
+        //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
+        String flush = getSessionScope(AttributeConst.FLUSH);
+        if (flush != null) {
+            putRequestScope(AttributeConst.FLUSH, flush);
+            removeSessionScope(AttributeConst.FLUSH);
+        }
 
         //詳細画面を表示
         forward(ForwardConst.FW_EMP_SHOW);
         }
-    }
+
 
     /**
      * 編集画面を表示する
