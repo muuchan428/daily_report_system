@@ -4,8 +4,10 @@
 <%@ page import="constants.ForwardConst" %>
 
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
+<c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commEdt" value="${ForwardConst.CMD_EDIT.getValue()}" />
+<c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
@@ -16,7 +18,7 @@
             <tbody>
                 <tr>
                     <th>氏名</th>
-                    <td><c:out value="${report.employee.name}" /></td>
+                    <td><a href="<c:url value='?action=${actEmp}&command=${commShow}&id=${report.employee.id}' />"><c:out value="${report.employee.name}" /></a></td>
                 </tr>
                 <tr>
                     <th>日付</th>
@@ -47,7 +49,7 @@
         </c:if>
 
         <p>
-            <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">一覧に戻る</a>
+            <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">戻る</a>
         </p>
     </c:param>
 </c:import>
