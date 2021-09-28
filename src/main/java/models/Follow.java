@@ -21,17 +21,17 @@ import lombok.Setter;
 @Table(name = JpaConst.TABLE_FOL)
 @NamedQueries({
     @NamedQuery(
-            name =JpaConst.Q_FOL_GET_ALL_MINE,
-            query = JpaConst.Q_FOL_GET_ALL_MINE_DEF ),
+           name =JpaConst.Q_FOL_GET_ALL_MINE,
+          query = JpaConst.Q_FOL_GET_ALL_MINE_DEF ),
     @NamedQuery(
             name =JpaConst.Q_FOL_COUNT_ALL_MINE,
             query =JpaConst.Q_FOL_COUNT_ALL_MINE_DEF),
     @NamedQuery(
             name =JpaConst.Q_FOL_REMOVE_FOL_EMP,
-            query =JpaConst.Q_FOL_REMOVE_FOL_EMP_DEF)
-
-
-
+            query =JpaConst.Q_FOL_REMOVE_FOL_EMP_DEF),
+    @NamedQuery(
+            name = JpaConst.Q_FOL_CHECK_FOL_EMP,
+            query = JpaConst.Q_FOL_CHECK_FOL_EMP_DEF )
 
 })
 
@@ -55,7 +55,7 @@ public class Follow {
 
     //フォローされる従業員
     @ManyToOne
-    @Column(name = JpaConst.FOL_COL_FOL_EMP)
+    @JoinColumn(name = JpaConst.FOL_COL_FOL_EMP,nullable = false)
     private Employee follow_employee;
 
 

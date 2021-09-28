@@ -60,12 +60,14 @@ public class Employee {
     /**
      * 社員番号
      */
+
     @Column(name = JpaConst.EMP_COL_CODE, nullable = false, unique = true)
     private String code;
 
     /**
      * 氏名
      */
+
     @Column(name = JpaConst.EMP_COL_NAME, nullable = false)
     private String name;
 
