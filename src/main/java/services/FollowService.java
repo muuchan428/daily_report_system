@@ -72,17 +72,19 @@ public class FollowService extends ServiceBase {
     }
 
     /**
-     * 指定した従業員がフォローしているかを取得し、データがあればTRUEでかえす
+     * 指定した従業員がフォローしているかを取得し、データがあればtrueで返す
      *
      */
     public Boolean checkFollow(EmployeeView employee, EmployeeView follow_employee) {
 
-        Follow follows = (Follow)em.createNamedQuery(JpaConst.Q_FOL_REMOVE_FOL_EMP,Follow.class)
+        Long follows = (long)em.createNamedQuery(JpaConst.Q_FOL_CHECK_FOL_EMP,Long.class)
                 .setParameter(JpaConst.JPQL_PARM_EMPLOYEE,EmployeeConverter.toModel(employee))
-                .setParameter(JpaConst.JPQL_PARM_FOLLOW, EmployeeConverter.toModel(follow_employee));
+                .setParameter(JpaConst.JPQL_PARM_FOLLOW, EmployeeConverter.toModel(follow_employee))
+                .getSingleResult();
 
-        if(follows == null) {
-            return false;
+
+        if(follows == 0) {
+            return  false;
         } else {
             return true;
         }
@@ -109,7 +111,10 @@ public class FollowService extends ServiceBase {
 
         Follow follows = (Follow)em.createNamedQuery(JpaConst.Q_FOL_REMOVE_FOL_EMP,Follow.class)
                                             .setParameter(JpaConst.JPQL_PARM_EMPLOYEE,EmployeeConverter.toModel(employee))
-                                            .setParameter(JpaConst.JPQL_PARM_FOLLOW, EmployeeConverter.toModel(follow_employee));
+                                            .setParameter(JpaConst.JPQL_PARM_FOLLOW, EmployeeConverter.toModel(follow_employee))
+                                            .getSingleResult();
+
+
         em.getTransaction().begin();
         em.remove(follows);
         em.getTransaction().commit();
