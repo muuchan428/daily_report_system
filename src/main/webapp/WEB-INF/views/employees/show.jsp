@@ -5,13 +5,57 @@
 <%@ page import="constants.AttributeConst" %>
 
 <c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
+<c:set var="actFol" value="${ForwardConst.ACT_FOL.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
+<c:set var="commCreate" value="${ForwardConst.CMD_CREATE.getValue()}" />
+<c:set var="commDest" value="${ForwardConst.CMD_DESTROY.getValue() }"/>
 <c:set var="commEdit" value="${ForwardConst.CMD_EDIT.getValue()}" />
+
 
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
+        <c:if test="${flush != null}">
+            <div id="flush_success">
+                <c:out value="${flush}"></c:out>
+            </div>
+        </c:if>
+        <h2> ${employee.name}さん の 詳細ページ</h2>
+        <c:if test="${login_employee.id.equals(employee.id) == false}">
+        <c:choose>
+            <c:when test= "${follow_check == false}">
+       <a href="#" onclick="confirmCreate();">フォロー</a>
+       <form method="POST"
+            action="<c:url value='?action=${actFol}&command=${commCreate}' />">
+            <input type="hidden" name="${AttributeConst.EMP_ID.getValue()}" value="${employee.id}" />
+            <input type="hidden" name="${AttributeConst.TOKEN.getValue()}" value="${_token}" />
 
-        <h2>id : ${employee.id} の従業員情報 詳細ページ</h2>
+        </form>
+        <script>
+            function confirmCreate() {
+                if (confirm("フォローしますか？")) {
+                    document.forms[0].submit();
+                }
+            }
+        </script>
+        </c:when>
+        <c:otherwise>
+               <a href="#" onclick="confirmDestroy();">フォロー解除</a>
+       <form method="POST"
+            action="<c:url value='?action=${actFol}&command=${commDest}' />">
+            <input type="hidden" name="${AttributeConst.EMP_ID.getValue()}" value="${employee.id}" />
+            <input type="hidden" name="${AttributeConst.TOKEN.getValue()}" value="${_token}" />
+        </form>
+        <script>
+            function confirmDestroy() {
+                if (confirm("フォロー解除しますか？")) {
+                    document.forms[0].submit();
+                }
+            }
+        </script>
+        </c:otherwise>
+        </c:choose>
+        </c:if>
+
 
         <table>
             <tbody>
@@ -42,11 +86,11 @@
                 </tr>
             </tbody>
         </table>
-
-        <p>
-            <a href="<c:url value='?action=${actEmp}&command=${commEdit}&id=${employee.id}' />">この従業員情報を編集する</a>
-        </p>
-
+         <c:if test="${login_employee.adminFlag == AttributeConst.ROLE_ADMIN.getIntegerValue()}">
+                <p>
+                     <a href="<c:url value='?action=${actEmp}&command=${commEdit}&id=${employee.id}' />">この従業員情報を編集する</a>
+                </p>
+          </c:if>
         <p>
             <a href="<c:url value='?action=${actEmp}&command=${commIdx}' />">一覧に戻る</a>
         </p>
