@@ -89,7 +89,7 @@ public interface JpaConst {
         String Q_FOL_GET_ALL_MINE_DEF = "SELECT f.follow_employee FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE ;
       //指定した従業員のフォロー件数を取得する
         String Q_FOL_COUNT_ALL_MINE = ENTITY_FOL + ".countAllMine";
-        String Q_FOL_COUNT_ALL_MINE_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee IN  (" + Q_FOL_GET_ALL_MINE_DEF + ")";
+        String Q_FOL_COUNT_ALL_MINE_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = : " + JPQL_PARM_EMPLOYEE;
       //指定した従業員のフォローしている従業員の日報を全件idの降順で取得する
         String Q_REP_GET_ALL_FOL = ENTITY_REP + ".getAllFollow";
         String Q_REP_GET_ALL_FOL_DEF = "SELECT r FROM Report AS r WHERE r.employee IN ("+ Q_FOL_GET_ALL_MINE_DEF + ")";
@@ -98,8 +98,11 @@ public interface JpaConst {
         String Q_REP_COUNT_ALL_FOL_DEF = "SELECT COUNT(r) FROM Report AS r WHERE r.employee  IN ("+ Q_FOL_GET_ALL_MINE_DEF + ")";
        //指定した従業員のフォローしている従業員を全件idの降順で取得する
         String Q_EMP_GET_ALL_FOL = ENTITY_EMP + ".getAllFollow";
-        String Q_EMP_GET_ALL_FOL_DEF = "SELECT e FROM Employee AS e WHERE e.employee IN (" + Q_FOL_GET_ALL_MINE_DEF + ") ORDER BY e.id DESC";
+        String Q_EMP_GET_ALL_FOL_DEF = "SELECT e FROM Employee AS e WHERE e.id IN (" + Q_FOL_GET_ALL_MINE_DEF + ") ORDER BY e.id DESC";
         //指定した従業員のフォローを解除するデータを取得する
-        String Q_FOL_REMOVE_FOL_EMP = ENTITY_EMP + "deleteFollowEmployee";
+        String Q_FOL_REMOVE_FOL_EMP = ENTITY_FOL + ".deleteFollowEmployee";
         String Q_FOL_REMOVE_FOL_EMP_DEF = "SELECT f  FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.follow_employee = :" + JPQL_PARM_FOLLOW;
+        //指定した従業員とフォローされる従業員のデータがあるか取得する
+        String Q_FOL_CHECK_FOL_EMP = ENTITY_FOL + ".checkFollowEmployee";
+        String Q_FOL_CHECK_FOL_EMP_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.follow_employee = :" + JPQL_PARM_FOLLOW;
 }
