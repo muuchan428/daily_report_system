@@ -165,3 +165,17 @@ pre {
 h3 {
     font-size: larger;
 }
+.follow_button{
+
+     text-align: right;
+}
+.follow_button a{
+
+           font-size: 23px;
+        background:#333333;
+        color: #eeeeee;
+     padding: 15px 20px ;
+     border-radius: 10px;
+}
+
+

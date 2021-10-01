@@ -6,6 +6,7 @@ import java.util.List;
 import javax.servlet.ServletException;
 
 import actions.views.EmployeeView;
+import actions.views.ReportView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
@@ -13,6 +14,7 @@ import constants.MessageConst;
 import constants.PropertyConst;
 import services.EmployeeService;
 import services.FollowService;
+import services.ReportService;
 
 /**
  * 従業員に関わる処理を行うActionクラス
@@ -22,6 +24,8 @@ public class EmployeeAction extends ActionBase {
 
     private EmployeeService service;
     private FollowService followService;
+    private ReportService reportService;
+
 
     /**
      * メソッドを実行する
@@ -31,6 +35,7 @@ public class EmployeeAction extends ActionBase {
 
         service = new EmployeeService();
         followService = new FollowService();
+        reportService = new ReportService();
 
 
         //メソッドを実行
@@ -38,6 +43,7 @@ public class EmployeeAction extends ActionBase {
 
         service.close();
         followService.close();
+        reportService.close();
     }
 
     /**
@@ -167,6 +173,18 @@ public class EmployeeAction extends ActionBase {
         }
         //ログインしている従業員からフォローされているかのチェック
         Boolean checkFollow = followService.checkFollow(loginEmployee, ev);
+
+        //従業員が作成した日報データを、指定されたページ数の一覧画面に表示する分取得する
+        int page = getPage();
+        List<ReportView> reports = reportService.getMinePerPage(ev, page);
+
+        //従業員が作成した日報データの件数を取得
+        long ReportsCount = reportService.countAllMine(ev);
+
+        putRequestScope(AttributeConst.REPORTS, reports); //取得した日報データ
+        putRequestScope(AttributeConst.REP_COUNT, ReportsCount); //ログイン中の従業員が作成した日報の数
+        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
 
         putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
         putRequestScope(AttributeConst.LOGIN_EMP,loginEmployee);//ログインしている従業員情報

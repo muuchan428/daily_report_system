@@ -105,4 +105,6 @@ public interface JpaConst {
         //指定した従業員とフォローされる従業員のデータがあるか取得する
         String Q_FOL_CHECK_FOL_EMP = ENTITY_FOL + ".checkFollowEmployee";
         String Q_FOL_CHECK_FOL_EMP_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.follow_employee = :" + JPQL_PARM_FOLLOW;
+
+
 }

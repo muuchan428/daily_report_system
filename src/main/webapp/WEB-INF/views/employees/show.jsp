@@ -20,10 +20,13 @@
             </div>
         </c:if>
         <h2> ${employee.name}さん の 詳細ページ</h2>
+
         <c:if test="${login_employee.id.equals(employee.id) == false}">
         <c:choose>
             <c:when test= "${follow_check == false}">
+             <div class ="follow_button">
        <a href="#" onclick="confirmCreate();">フォロー</a>
+       </div>
        <form method="POST"
             action="<c:url value='?action=${actFol}&command=${commCreate}' />">
             <input type="hidden" name="${AttributeConst.EMP_ID.getValue()}" value="${employee.id}" />
@@ -39,7 +42,9 @@
         </script>
         </c:when>
         <c:otherwise>
-               <a href="#" onclick="confirmDestroy();">フォロー解除</a>
+            <div class ="follow_button">
+               <a href="#"  onclick="confirmDestroy();">フォロー解除</a>
+               </div>
        <form method="POST"
             action="<c:url value='?action=${actFol}&command=${commDest}' />">
             <input type="hidden" name="${AttributeConst.EMP_ID.getValue()}" value="${employee.id}" />
@@ -55,7 +60,7 @@
         </c:otherwise>
         </c:choose>
         </c:if>
-
+        <h3>従業員詳細</h3>
 
         <table>
             <tbody>
@@ -86,13 +91,50 @@
                 </tr>
             </tbody>
         </table>
-         <c:if test="${login_employee.adminFlag == AttributeConst.ROLE_ADMIN.getIntegerValue()}">
+
+        <h3>日報一覧</h3>
+          <table id="report_list">
+            <tbody>
+                <tr>
+                    <th class="report_name">氏名</th>
+                    <th class="report_date">日付</th>
+                    <th class="report_title">タイトル</th>
+                    <th class="report_action">操作</th>
+                </tr>
+                <c:forEach var="report" items="${reports}" varStatus="status">
+                    <fmt:parseDate value="${report.reportDate}" pattern="yyyy-MM-dd" var="reportDay" type="date" />
+                    <tr class="row${status.count % 2}">
+                        <td class="report_name"><c:out value="${report.employee.name}" /></td>
+                        <td class="report_date"><fmt:formatDate value='${reportDay}' pattern='yyyy-MM-dd' /></td>
+                        <td class="report_title">${report.title}</td>
+                        <td class="report_action"><a href="<c:url value='?action=${actRep}&command=${commShow}&id=${report.id}' />">詳細を見る</a></td>
+                    </tr>
+                </c:forEach>
+            </tbody>
+        </table>
+
+        <div id="pagination">
+            （全 ${reports_count} 件）<br />
+            <c:forEach var="i" begin="1" end="${((reports_count - 1) / maxRow) + 1}" step="1">
+                <c:choose>
+                    <c:when test="${i == page}">
+                        <c:out value="${i}" />&nbsp;
+                    </c:when>
+                    <c:otherwise>
+                        <a href="<c:url value='?action=${actTop}&command=${commIdx}&page=${i}' />"><c:out value="${i}" /></a>&nbsp;
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </div>
+
+        <c:if test="${login_employee.adminFlag == AttributeConst.ROLE_ADMIN.getIntegerValue()}">
                 <p>
                      <a href="<c:url value='?action=${actEmp}&command=${commEdit}&id=${employee.id}' />">この従業員情報を編集する</a>
                 </p>
           </c:if>
         <p>
-            <a href="<c:url value='?action=${actEmp}&command=${commIdx}' />">一覧に戻る</a>
+<a href="javascript:history.back()">戻る</a>
+
         </p>
     </c:param>
 </c:import>

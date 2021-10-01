@@ -49,7 +49,7 @@
         </c:if>
 
         <p>
-            <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">戻る</a>
+            <a href="javascript:history.back()">戻る</a>
         </p>
     </c:param>
 </c:import>
