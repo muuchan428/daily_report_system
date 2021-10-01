@@ -17,7 +17,9 @@
             </div>
         </c:if>
         <h2>フォローしている日報　一覧</h2>
+        <div class= "follow_button">
                 <p><a href="<c:url value='?action=${actFol}&command=${commShow}' />">フォロー一覧へ</a></p>
+        </div>
         <table id="report_list">
             <tbody>
                 <tr>
