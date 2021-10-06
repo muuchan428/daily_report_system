@@ -8,6 +8,8 @@ public enum ForwardConst {
     ACT_EMP("Employee"),
     ACT_REP("Report"),
     ACT_FOL("Follow"),
+    ACT_DEP("Department"),
+    ACT_STO("Store"),
     ACT_AUTH("Auth"),
 
     //command
@@ -42,7 +44,9 @@ public enum ForwardConst {
     FW_REP_NEW("reports/new"),
     FW_REP_EDIT("reports/edit"),
     FW_FOL_INDEX("follows/index"),
-    FW_FOL_SHOW("follows/show");
+    FW_FOL_SHOW("follows/show"),
+    FW_DEP_INDEX("department/index"),
+    FW_DEP_NEW("department/new");
 
     /**
      * 文字列
