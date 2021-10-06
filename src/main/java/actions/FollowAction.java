@@ -17,7 +17,7 @@ import services.FollowService;
 import services.ReportService;
 
     /**
-     * 日報に関する処理を行うActionクラス
+     * フォローに関する処理を行うActionクラス
      *
      */
     public class FollowAction extends ActionBase {
