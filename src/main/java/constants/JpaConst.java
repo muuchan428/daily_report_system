@@ -48,10 +48,28 @@ public interface JpaConst {
         String FOL_COL_EMP = "employee_id";//フォローする従業員のid
         String FOL_COL_FOL_EMP = "follow_employee_id";//フォローされる従業員のid
 
+       //部署テーブル
+        String TABLE_DEP ="departments";//テーブル名
+        //部署テーブルカラム
+        String DEP_COL_ID ="id";//id
+        String DEP_COL_CODE = "code";//部署番号
+        String DEP_COL_NAME = "name";//部署名
+        //店舗テーブル
+        String TABLE_STO = "stores";//テーブル名
+        //店舗テーブルカラム
+        String STO_COL_ID = "id";//id
+        String STO_COL_CODE = "code";//店舗番号
+        String STO_COL_NAME = "name";//店舗名
+
+
         //Entity名
         String ENTITY_EMP = "employee"; //従業員
         String ENTITY_REP = "report"; //日報
         String ENTITY_FOL = "follow";//フォロー
+        String ENTITY_DEP = "department";//部署
+        String ENTITY_STO = "store";//店舗
+
+
 
         //JPQL内パラメータ
         String JPQL_PARM_CODE = "code"; //社員番号
@@ -105,6 +123,17 @@ public interface JpaConst {
         //指定した従業員とフォローされる従業員のデータがあるか取得する
         String Q_FOL_CHECK_FOL_EMP = ENTITY_FOL + ".checkFollowEmployee";
         String Q_FOL_CHECK_FOL_EMP_DEF = "SELECT COUNT(f) FROM Follow AS f WHERE f.employee = :" + JPQL_PARM_EMPLOYEE + " AND f.follow_employee = :" + JPQL_PARM_FOLLOW;
-
+        //すべての部署データをid順に降順に取得
+        String Q_DEP_GET_ALL = ENTITY_DEP + ".getAll";
+        String Q_DEP_GET_ALL_DEF = "SELECT d FROM Department AS d ORDER BY d.id DESC";
+        //部署データの件数を取得する
+        String Q_DEP_COUNT_ALL = ENTITY_DEP + ".countAll";
+        String Q_DEP_COUNT_ALL_DEF ="SELECT COUNT(d) FROM Department AS d";
+        //指定した部署を取得する
+        String Q_DEP_GET_BY_ID = ENTITY_DEP + ".getEmpDep";
+        String Q_DEP_GET_BY_ID_DEF = "SELECT d FROM Department AS d WHERE d.id = :" + JPQL_PARM_EMPLOYEE;
+        //指定した部署番号を保持する部署の件数を取得
+        String Q_DEP_COUNT_RESISTERED_BY_CODE = ENTITY_DEP + ".countRegisteredByCode";
+        String Q_DEP_COUNT_RESISTERED_BY_CODE_DEF = "SELECT COUNT(d) FROM Department AS d WHERE d.code = :" + JPQL_PARM_CODE;
 
 }
