@@ -4,6 +4,7 @@
 <%@ page import="constants.ForwardConst" %>
 
 <c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
+<c:set var="actDep" value="${ForwardConst.ACT_DEP.getValue()}" />
 <c:set var="commShow" value="${ForwardConst.CMD_SHOW.getValue()}" />
 <c:set var="commNew" value="${ForwardConst.CMD_NEW.getValue()}" />
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
@@ -15,6 +16,9 @@
             </div>
         </c:if>
         <h2>従業員　一覧</h2>
+        <div class= "follow_button">
+                <p><a href="<c:url value='?action=${actDep}&command=${commIdx}' />">部署・店舗一覧へ</a></p>
+        </div>
         <table id="employee_list">
             <tbody>
                 <tr>
