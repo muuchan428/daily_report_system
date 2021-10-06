@@ -6,6 +6,7 @@ import javax.persistence.NoResultException;
 
 import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
+import actions.views.DepartmentView;
 import constants.JpaConst;
 import models.Employee;
 import models.validators.EmployeeValidator;
@@ -193,6 +194,12 @@ public class EmployeeService extends ServiceBase {
 
     }
 
+    public long countInDepartment(DepartmentView dv) {
+        long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_IN_DEP, Long.class)
+                .getSingleResult();
+
+        return empCount;
+    }
     /**
      * 社員番号とパスワードを条件に検索し、データが取得できるかどうかで認証結果を返却する
      * @param code 社員番号

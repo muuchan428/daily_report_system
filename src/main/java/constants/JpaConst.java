@@ -76,6 +76,7 @@ public interface JpaConst {
         String JPQL_PARM_PASSWORD = "password"; //パスワード
         String JPQL_PARM_EMPLOYEE = "employee"; //従業員
         String JPQL_PARM_FOLLOW = "follow_employee";//フォローされた従業員
+        String JPQL_PARM_DEPARTMENT = "department";//部署
 
         //NamedQueryの nameとquery
         //全ての従業員をidの降順に取得する
@@ -135,5 +136,7 @@ public interface JpaConst {
         //指定した部署番号を保持する部署の件数を取得
         String Q_DEP_COUNT_RESISTERED_BY_CODE = ENTITY_DEP + ".countRegisteredByCode";
         String Q_DEP_COUNT_RESISTERED_BY_CODE_DEF = "SELECT COUNT(d) FROM Department AS d WHERE d.code = :" + JPQL_PARM_CODE;
-
+        //指定した部署に所属している従業員の件数を取得する
+        String Q_EMP_COUNT_IN_DEP = ENTITY_EMP +".countDep";
+        String Q_EMP_COUNT_IN_DEP_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.department_id = :" + JPQL_PARM_DEPARTMENT;
 }
