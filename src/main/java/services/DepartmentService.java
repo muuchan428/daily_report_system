@@ -3,8 +3,6 @@ package services;
 
 import java.util.List;
 
-    import javax.persistence.NoResultException;
-
     import actions.views.DepartmentConverter;
     import actions.views.DepartmentView;
 import constants.JpaConst;
@@ -136,7 +134,7 @@ public class DepartmentService extends ServiceBase {
         em.getTransaction().commit();
 
     }
-    
+
 
 
 }

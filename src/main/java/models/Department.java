@@ -56,10 +56,5 @@ public class Department {
     @JoinColumn(name = JpaConst.DEP_COL_NAME,nullable = false)
     private String name;
 
-    /**
-     * 削除された従業員かどうか（現役：0、削除済み：1）
-     */
-    @Column(name = JpaConst.EMP_COL_DELETE_FLAG, nullable = false)
-    private Integer deleteFlag;
 
 }

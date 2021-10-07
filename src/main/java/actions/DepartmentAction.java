@@ -76,6 +76,30 @@ public class DepartmentAction extends ActionBase {
         forward(ForwardConst.FW_DEP_NEW);
         }
     }
+
+    /**
+     * 編集画面を表示する
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void edit() throws ServletException, IOException {
+
+        if(checkAdmin()) {
+
+        //idを条件に従業員データを取得する
+        DepartmentView dv = depService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
+
+            //データが取得できなかった、場合はエラー画面を表示
+            forward(ForwardConst.FW_ERR_UNKNOWN);
+
+        putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+        putRequestScope(AttributeConst.EMPLOYEE, dv); //取得した従業員情報
+
+        //編集画面を表示する
+        forward(ForwardConst.FW_DEP_EDIT);
+        }
+
+    }
     /**
      * 新規登録を行う
      * @throws ServletException
@@ -92,8 +116,7 @@ public class DepartmentAction extends ActionBase {
                 DepartmentView dv = new DepartmentView(
                         null,
                        getRequestParam(AttributeConst.DEP_CODE),
-                       getRequestParam(AttributeConst.DEP_NAME),
-                       AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
+                       getRequestParam(AttributeConst.DEP_NAME));
                 //部署情報登録
                 List<String> errors = depService.create(dv);
 
@@ -118,6 +141,40 @@ public class DepartmentAction extends ActionBase {
                 }
 
 
+        }
+    }
+
+    public void update() throws ServletException, IOException {
+
+        //CSRF対策 tokenのチェック
+        if (checkAdmin() && checkToken()) {
+            //パラメータの値を元に部署情報のインスタンスを作成する
+            DepartmentView dv = new DepartmentView(
+                    toNumber(getRequestParam(AttributeConst.DEP_ID)),
+                    getRequestParam(AttributeConst.DEP_CODE),
+                    getRequestParam(AttributeConst.DEP_NAME));
+
+            //部署情報更新
+            List<String> errors = depService.update(dv);
+
+            if (errors.size() > 0) {
+                //更新中にエラーが発生した場合
+
+                putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+                putRequestScope(AttributeConst.DEPARTMENT, dv); //入力された従業員情報
+                putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
+
+                //編集画面を再表示
+                forward(ForwardConst.FW_DEP_EDIT);
+            } else {
+                //更新中にエラーがなかった場合
+
+                //セッションに更新完了のフラッシュメッセージを設定
+                putSessionScope(AttributeConst.FLUSH, MessageConst.I_UPDATED.getMessage());
+
+                //一覧画面にリダイレクト
+                redirect(ForwardConst.ACT_DEP, ForwardConst.CMD_INDEX);
+            }
         }
     }
     /**
