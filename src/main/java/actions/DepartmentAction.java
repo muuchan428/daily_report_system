@@ -7,27 +7,27 @@ import javax.servlet.ServletException;
 
 import actions.views.EmployeeView;
 import actions.views.DepartmentView;
+import actions.views.StoreView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
-import constants.PropertyConst;
 import services.EmployeeService;
 import services.DepartmentService;
 
 public class DepartmentAction extends ActionBase {
-        EmployeeService empService;
-        DepartmentService depService;
+        EmployeeService employeeService;
+        DepartmentService departmentService;
     @Override
     public void process() throws ServletException, IOException {
-        empService = new EmployeeService();
-        depService = new DepartmentService();
+        employeeService = new EmployeeService();
+        departmentService = new DepartmentService();
 
         //メソッドを実行
         invoke();
 
-        empService.close();
-        depService.close();
+        employeeService.close();
+        departmentService.close();
 
     }
     public void index() throws ServletException, IOException {
@@ -36,10 +36,10 @@ public class DepartmentAction extends ActionBase {
         if(checkAdmin()) {
         //指定されたページ数の一覧画面に表示するデータを取得
         int page = getPage();
-        List<DepartmentView> departments = depService.getPerPage(page);
+        List<DepartmentView> departments = departmentService.getPerPage(page);
 
         //全ての部署データの件数を取得
-        long departmentCount = depService.countAll();
+        long departmentCount = departmentService.countAll();
 
         putRequestScope(AttributeConst.DEPARTMENTS, departments); //取得した従業員データ
         putRequestScope(AttributeConst.DEP_COUNT, departmentCount); //全ての従業員データの件数
@@ -77,6 +77,35 @@ public class DepartmentAction extends ActionBase {
         }
     }
 
+
+    /**
+     * 詳細画面を表示する
+     * @throws ServletException
+     * @throws IOException
+     */
+    public void show() throws ServletException, IOException {
+
+
+        //管理者かどうかのチェック
+        if(checkAdmin()) {
+                //idを条件に部署データを取得する
+                DepartmentView dv = departmentService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
+
+                putRequestScope(AttributeConst.DEPARTMENT, dv);//取得した部署情報
+                putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+
+                //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
+                String flush = getSessionScope(AttributeConst.FLUSH);
+                if (flush != null) {
+                    putRequestScope(AttributeConst.FLUSH, flush);
+                    removeSessionScope(AttributeConst.FLUSH);
+                }
+
+                //詳細画面を表示
+                forward(ForwardConst.FW_DEP_SHOW);
+        }
+    }
+
     /**
      * 編集画面を表示する
      * @throws ServletException
@@ -87,7 +116,7 @@ public class DepartmentAction extends ActionBase {
         if(checkAdmin()) {
 
         //idを条件に従業員データを取得する
-        DepartmentView dv = depService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
+        DepartmentView dv = departmentService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
 
             //データが取得できなかった、場合はエラー画面を表示
             forward(ForwardConst.FW_ERR_UNKNOWN);
@@ -118,7 +147,7 @@ public class DepartmentAction extends ActionBase {
                        getRequestParam(AttributeConst.DEP_CODE),
                        getRequestParam(AttributeConst.DEP_NAME));
                 //部署情報登録
-                List<String> errors = depService.create(dv);
+                List<String> errors = departmentService.create(dv);
 
                 if (errors.size() > 0) {
                     //登録中にエラーがあった場合
@@ -155,7 +184,7 @@ public class DepartmentAction extends ActionBase {
                     getRequestParam(AttributeConst.DEP_NAME));
 
             //部署情報更新
-            List<String> errors = depService.update(dv);
+            List<String> errors = departmentService.update(dv);
 
             if (errors.size() > 0) {
                 //更新中にエラーが発生した場合
@@ -189,14 +218,14 @@ public class DepartmentAction extends ActionBase {
         //CSRF対策 tokenのチェック
         if (checkAdmin() && checkToken()) {
 
-            DepartmentView department = depService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
-            long countEmp = empService.countInDepartment(department);//所属している従業員の数
+            DepartmentView department = departmentService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
+            long countEmp = employeeService.countInDepartment(department);//所属している従業員の数
 
             if(countEmp == 0) {
                 //所属している従業員の数が０の場合
 
                 //指定した部署を削除する
-            depService.removeDepartment(department);
+            departmentService.removeDepartment(department);
 
             //セッションに削除完了のフラッシュメッセージを設定
             putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED.getMessage());
@@ -207,7 +236,7 @@ public class DepartmentAction extends ActionBase {
                 //所属している従業員の数が１以上の場合
 
                 //エラーメッセージを設定
-                putRequestScope(AttributeConst.ERR, MessageConst.E_NOT_DELETE_DEP.getMessage() );
+                putRequestScope(AttributeConst.ERR, MessageConst.E_NOT_DELETE_DEP_STO.getMessage() );
 
                 //詳細画面にリダイレクト
                 redirect(ForwardConst.ACT_DEP, ForwardConst.CMD_SHOW);
