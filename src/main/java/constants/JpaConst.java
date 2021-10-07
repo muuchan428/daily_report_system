@@ -77,6 +77,7 @@ public interface JpaConst {
         String JPQL_PARM_EMPLOYEE = "employee"; //従業員
         String JPQL_PARM_FOLLOW = "follow_employee";//フォローされた従業員
         String JPQL_PARM_DEPARTMENT = "department";//部署
+        String JPQL_PARM_STORE = "store";//店舗
 
         //NamedQueryの nameとquery
         //全ての従業員をidの降順に取得する
@@ -139,4 +140,19 @@ public interface JpaConst {
         //指定した部署に所属している従業員の件数を取得する
         String Q_EMP_COUNT_IN_DEP = ENTITY_EMP +".countDep";
         String Q_EMP_COUNT_IN_DEP_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.department_id = :" + JPQL_PARM_DEPARTMENT;
+        //すべての店舗データをid順に降順に取得
+        String Q_STO_GET_ALL = ENTITY_STO + ".getAll";
+        String Q_STO_GET_ALL_DEF = "SELECT s FROM Store AS s ORDER BY s.id DESC";
+        //指定した部署を取得する
+        String Q_STO_GET_BY_ID = ENTITY_STO + ".getEmpSto";
+        String Q_STO_GET_BY_ID_DEF = "SELECT s FROM Store AS s WHERE s.id = :" + JPQL_PARM_EMPLOYEE;
+        //店舗データの件数を取得する
+        String Q_STO_COUNT_ALL = ENTITY_STO + ".countAll";
+        String Q_STO_COUNT_ALL_DEF ="SELECT COUNT(s) FROM Store AS s";
+        //指定した部署番号を保持する部署の件数を取得
+        String Q_STO_COUNT_RESISTERED_BY_CODE = ENTITY_STO + ".countRegisteredByCode";
+        String Q_STO_COUNT_RESISTERED_BY_CODE_DEF = "SELECT COUNT(s) FROM Store AS s WHERE s.code = :" + JPQL_PARM_CODE;
+        //指定した部署に所属している従業員の件数を取得する
+        String Q_EMP_COUNT_IN_STO = ENTITY_EMP +".countStore";
+        String Q_EMP_COUNT_IN_STO_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.store_id = :" + JPQL_PARM_STORE;
 }
