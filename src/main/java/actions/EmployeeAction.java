@@ -27,7 +27,7 @@ import services.StoreService;
  */
 public class EmployeeAction extends ActionBase {
 
-    private EmployeeService service;
+    private EmployeeService employeeService;
     private FollowService followService;
     private ReportService reportService;
     private DepartmentService departmentService;
@@ -40,7 +40,7 @@ public class EmployeeAction extends ActionBase {
     @Override
     public void process() throws ServletException, IOException {
 
-        service = new EmployeeService();
+        employeeService = new EmployeeService();
         followService = new FollowService();
         reportService = new ReportService();
         departmentService = new DepartmentService();
@@ -50,7 +50,7 @@ public class EmployeeAction extends ActionBase {
         //メソッドを実行
         invoke();
 
-        service.close();
+        employeeService.close();
         followService.close();
         reportService.close();
         departmentService.close();
@@ -68,10 +68,10 @@ public class EmployeeAction extends ActionBase {
         if(checkAdmin()) {
         //指定されたページ数の一覧画面に表示するデータを取得
         int page = getPage();
-        List<EmployeeView> employees = service.getPerPage(page);
+        List<EmployeeView> employees = employeeService.getPerPage(page);
 
         //全ての従業員データの件数を取得
-        long employeeCount = service.countAll();
+        long employeeCount = employeeService.countAll();
 
         putRequestScope(AttributeConst.EMPLOYEES, employees); //取得した従業員データ
         putRequestScope(AttributeConst.EMP_COUNT, employeeCount); //全ての従業員データの件数
@@ -147,7 +147,7 @@ public class EmployeeAction extends ActionBase {
             String pepper = getContextScope(PropertyConst.PEPPER);
 
             //従業員情報登録
-            List<String> errors = service.create(ev, pepper);
+            List<String> errors = employeeService.create(ev, pepper);
 
             if (errors.size() > 0) {
                 //登録中にエラーがあった場合
@@ -186,7 +186,7 @@ public class EmployeeAction extends ActionBase {
             EmployeeView loginEmployee = (EmployeeView)getSessionScope(AttributeConst.LOGIN_EMP);
 
         //idを条件に従業員データを取得する
-        EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+        EmployeeView ev = employeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
         if (ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
 
@@ -236,7 +236,7 @@ public class EmployeeAction extends ActionBase {
         if(checkAdmin()) {
 
         //idを条件に従業員データを取得する
-        EmployeeView ev = service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+        EmployeeView ev = employeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
         if (ev == null || ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()) {
 
@@ -266,16 +266,19 @@ public class EmployeeAction extends ActionBase {
         String word =getRequestParam(AttributeConst.SEARCH_WORD);
         List<EmployeeView> ev = new ArrayList<EmployeeView>();
         if(word != "") {
-            if(service.searchEmployee(word) != null) {
-         ev.addAll(service.searchEmployee(word));
+            if(employeeService.searchEmployee(word) != null ) {//該当する従業員がいた場合
+         ev.addAll(employeeService.searchEmployee(word));
+         putRequestScope(AttributeConst.EMPLOYEES, ev);
+            } else {//該当する従業員がいない場合
+                putRequestScope(AttributeConst.EMPLOYEES, null);
             }
          putRequestScope(AttributeConst.ERR,null );
-        } else {
+        } else {//入力されていない場合
             putRequestScope(AttributeConst.ERR, "検索キーワードを入力してください");
         }
 
         putRequestScope(AttributeConst.SEARCH_WORD, word);
-        putRequestScope(AttributeConst.EMPLOYEES, ev);
+
 
         //検索結果画面を表示する
         forward(ForwardConst.FW_EMP_SEARCH);
@@ -312,7 +315,7 @@ public class EmployeeAction extends ActionBase {
             String pepper = getContextScope(PropertyConst.PEPPER);
 
             //従業員情報更新
-            List<String> errors = service.update(ev, pepper);
+            List<String> errors = employeeService.update(ev, pepper);
 
             if (errors.size() > 0) {
                 //更新中にエラーが発生した場合
@@ -346,7 +349,7 @@ public class EmployeeAction extends ActionBase {
         if (checkAdmin() && checkToken()) {
 
             //idを条件に従業員データを論理削除する
-            service.destroy(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+            employeeService.destroy(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
             //セッションに削除完了のフラッシュメッセージを設定
             putSessionScope(AttributeConst.FLUSH, MessageConst.I_DELETED.getMessage());

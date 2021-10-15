@@ -22,24 +22,24 @@ import services.ReportService;
      */
     public class FollowAction extends ActionBase {
 
-        private FollowService f_service;
-        private EmployeeService  e_service;
-        private ReportService r_service;
+        private FollowService followService;
+        private EmployeeService  emplyoeeService;
+        private ReportService reportService;
         /**
          * メソッドを実行する
          */
         @Override
         public void process() throws ServletException, IOException {
 
-            f_service = new FollowService();
-            e_service = new EmployeeService();
-            r_service = new ReportService();
+            followService = new FollowService();
+            emplyoeeService = new EmployeeService();
+            reportService = new ReportService();
 
             //メソッドを実行
             invoke();
-            f_service.close();
-            e_service.close();
-            r_service.close();
+            followService.close();
+            emplyoeeService.close();
+            reportService.close();
 
         }
 
@@ -55,10 +55,10 @@ import services.ReportService;
 
             //指定されたページ数の一覧画面に表示する日報データを取得
             int page = getPage();
-            List<ReportView> reports = f_service.getFollowReportsPerPage(loginEmployee, page);
+            List<ReportView> reports = followService.getFollowReportsPerPage(loginEmployee, page);
 
             //全日報データの件数を取得
-            long reportsCount = f_service.countAllFollowReports(loginEmployee);
+            long reportsCount = followService.countAllFollowReports(loginEmployee);
 
             putRequestScope(AttributeConst.REPORTS, reports); //取得した日報データ
             putRequestScope(AttributeConst.REP_COUNT, reportsCount); //全ての日報データの件数
@@ -88,10 +88,10 @@ import services.ReportService;
 
             //指定されたページ数の一覧画面に表示する従業員データを取得
             int page = getPage();
-            List<EmployeeView> employees = f_service.getFollowEmployeesPerPage(loginEmployee,page);
+            List<EmployeeView> employees = followService.getFollowEmployeesPerPage(loginEmployee,page);
 
             //全従業員データの件数を取得
-            long followEmployeeCount = f_service.countAllFollowEmployees(loginEmployee);
+            long followEmployeeCount = followService.countAllFollowEmployees(loginEmployee);
 
             putRequestScope(AttributeConst.EMPLOYEES, employees ); //取得した従業員のデータ
             putRequestScope(AttributeConst.FOL_COUNT, followEmployeeCount); //従業員データの件数
@@ -127,10 +127,10 @@ import services.ReportService;
            EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
            //idを条件に従業員データを取得する
-           EmployeeView f_ev = e_service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+           EmployeeView f_ev = emplyoeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
                 //社員番号を条件にフォローデータ削除する
-                f_service.removeFollowEmployee(loginEmployee, f_ev);
+                followService.removeFollowEmployee(loginEmployee, f_ev);
 
                 //セッションに削除完了のフラッシュメッセージを設定
                 putSessionScope(AttributeConst.FLUSH, MessageConst.I_REMOVED.getMessage());
@@ -155,7 +155,7 @@ import services.ReportService;
                     EmployeeView ev = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
                     //idを条件に従業員データを取得する
-                    EmployeeView f_ev = e_service.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+                    EmployeeView f_ev = emplyoeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
                     //パラメータの値をもとにフォローデータのインスタンスを作成する
                     FollowView fv = new FollowView(
@@ -163,7 +163,7 @@ import services.ReportService;
                             ev,
                             f_ev);
 
-                    f_service.create(fv);
+                    followService.create(fv);
 
                     //セッションに登録完了のフラッシュメッセージを設定
                     putSessionScope(AttributeConst.FLUSH, MessageConst.I_FOLLOWED.getMessage());

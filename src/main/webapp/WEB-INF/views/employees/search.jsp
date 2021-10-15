@@ -15,9 +15,13 @@
     <div id="flush_error">
             ・<c:out value="${errors}" /><br />
      </div>
+             <p>
+<a href="javascript:history.back()">戻る</a>
+
+        </p>
  </c:when>
 
-        <c:when test= "${emplyoees.length != 0}">
+        <c:when test= "${employees != null}">
                 <h2>${word} の検索結果</h2>
         <table id="employee_list">
             <tbody>
@@ -48,10 +52,17 @@
                 </c:forEach>
             </tbody>
         </table>
+                <p>
+<a href="javascript:history.back()">戻る</a>
+
+        </p>
         </c:when>
         <c:otherwise>
     <h2>${word}　に該当する従業員はいませんでした。</h2>
+        <p>
+<a href="javascript:history.back()">戻る</a>
 
+        </p>
 
         </c:otherwise>
     </c:choose>

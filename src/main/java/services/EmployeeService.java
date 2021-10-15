@@ -260,9 +260,11 @@ public class EmployeeService extends ServiceBase {
 
         } else if(en.length == 2){//姓名どちらも入力された場合
             List<EmployeeView> result = searchName(en[0], en[1]);
+            if(result != null) {
                     evs.addAll(result);
+            }
 
-                }
+        }
 
         if(evs.size() != 0) {
 
