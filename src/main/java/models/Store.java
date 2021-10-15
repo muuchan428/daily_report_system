@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-@Table(name = JpaConst.TABLE_DEP)
+@Table(name = JpaConst.TABLE_STO)
 @NamedQueries({
     @NamedQuery(
             name = JpaConst.Q_STO_GET_ALL,

@@ -3,10 +3,13 @@ package services;
 
 import java.util.List;
 
-    import actions.views.StoreConverter;
+import actions.views.DepartmentConverter;
+import actions.views.DepartmentView;
+import actions.views.StoreConverter;
     import actions.views.StoreView;
 import constants.JpaConst;
-    import models.Store;
+import models.Department;
+import models.Store;
 import models.validators.StoreValidator;
 
 public class StoreService extends ServiceBase {
@@ -18,6 +21,13 @@ public class StoreService extends ServiceBase {
         long storeCount = (long)em.createNamedQuery(JpaConst.Q_STO_COUNT_ALL, Long.class)
                                     .getSingleResult();
         return storeCount;
+    }
+
+    public List<StoreView> getAllStore(){
+        List<Store> stores = em.createNamedQuery(JpaConst.Q_STO_GET_ALL, Store.class)
+                                                                 .getResultList();
+        return StoreConverter.toViewList(stores);
+
     }
    /**
     * ページに表示する店舗データを取得
@@ -112,7 +122,7 @@ public class StoreService extends ServiceBase {
 
         //バリデーションエラーがなければデータを更新する
         if (errors.size() == 0) {
-            update(savedStore);
+            updateInternal(savedStore);
         }
 
         //エラーを返却（エラーがなければ0件の空リスト）
@@ -134,7 +144,18 @@ public class StoreService extends ServiceBase {
         em.getTransaction().commit();
 
     }
+    /**
+     * データを更新する
+     * @param sv 画面から入力された店舗の登録内容
+     */
+    private void updateInternal(StoreView sv) {
 
+        em.getTransaction().begin();
+       Store s = findOneInternal(sv.getId());
+        StoreConverter.copyViewToModel(s, sv);
+        em.getTransaction().commit();
+
+    }
 
 
 }
