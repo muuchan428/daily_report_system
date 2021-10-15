@@ -7,7 +7,9 @@ import javax.persistence.NoResultException;
 
 import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
+import actions.views.StoreConverter;
 import actions.views.StoreView;
+import actions.views.DepartmentConverter;
 import actions.views.DepartmentView;
 import constants.JpaConst;
 import models.Employee;
@@ -205,6 +207,7 @@ public class EmployeeService extends ServiceBase {
      */
     public long countInDepartment(DepartmentView dv) {
         long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_IN_DEP, Long.class)
+                .setParameter(JpaConst.JPQL_PARM_DEPARTMENT, DepartmentConverter.toModel(dv))
                 .getSingleResult();
 
         return empCount;
@@ -216,6 +219,7 @@ public class EmployeeService extends ServiceBase {
      */
     public long countInStore(StoreView sv) {
         long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_IN_STO, Long.class)
+                .setParameter(JpaConst.JPQL_PARM_STORE,StoreConverter.toModel(sv))
                 .getSingleResult();
 
         return empCount;

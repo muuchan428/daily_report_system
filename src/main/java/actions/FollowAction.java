@@ -51,14 +51,14 @@ import services.ReportService;
         public void index() throws ServletException, IOException {
 
             //セッションからログイン中の従業員情報を取得
-            EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+            EmployeeView loginEmp = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
             //指定されたページ数の一覧画面に表示する日報データを取得
             int page = getPage();
-            List<ReportView> reports = followService.getFollowReportsPerPage(loginEmployee, page);
+            List<ReportView> reports = followService.getFollowReportsPerPage(loginEmp, page);
 
             //全日報データの件数を取得
-            long reportsCount = followService.countAllFollowReports(loginEmployee);
+            long reportsCount = followService.countAllFollowReports(loginEmp);
 
             putRequestScope(AttributeConst.REPORTS, reports); //取得した日報データ
             putRequestScope(AttributeConst.REP_COUNT, reportsCount); //全ての日報データの件数
@@ -84,17 +84,17 @@ import services.ReportService;
         public void show() throws ServletException, IOException {
 
           //セッションからログイン中の従業員情報を取得
-            EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+            EmployeeView loginEmp = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
             //指定されたページ数の一覧画面に表示する従業員データを取得
             int page = getPage();
-            List<EmployeeView> employees = followService.getFollowEmployeesPerPage(loginEmployee,page);
+            List<EmployeeView> employees = followService.getFollowEmployeesPerPage(loginEmp,page);
 
             //全従業員データの件数を取得
-            long followEmployeeCount = followService.countAllFollowEmployees(loginEmployee);
+            long followEmpCount = followService.countAllFollowEmployees(loginEmp);
 
             putRequestScope(AttributeConst.EMPLOYEES, employees ); //取得した従業員のデータ
-            putRequestScope(AttributeConst.FOL_COUNT, followEmployeeCount); //従業員データの件数
+            putRequestScope(AttributeConst.FOL_COUNT, followEmpCount); //従業員データの件数
             putRequestScope(AttributeConst.PAGE, page); //ページ数
             putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
 
@@ -124,19 +124,19 @@ import services.ReportService;
             if (checkToken()) {
 
         //セッションからログイン中の従業員情報を取得
-           EmployeeView loginEmployee = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
+           EmployeeView loginEmp = (EmployeeView) getSessionScope(AttributeConst.LOGIN_EMP);
 
            //idを条件に従業員データを取得する
-           EmployeeView f_ev = emplyoeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
+           EmployeeView followEmp = emplyoeeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_ID)));
 
                 //社員番号を条件にフォローデータ削除する
-                followService.removeFollowEmployee(loginEmployee, f_ev);
+                followService.removeFollowEmployee(loginEmp, followEmp);
 
                 //セッションに削除完了のフラッシュメッセージを設定
                 putSessionScope(AttributeConst.FLUSH, MessageConst.I_REMOVED.getMessage());
 
                 //一覧画面にリダイレクト
-                redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_SHOW, f_ev.getId());
+                redirect(ForwardConst.ACT_EMP, ForwardConst.CMD_SHOW, followEmp.getId());
             }
         }
 

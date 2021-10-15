@@ -25,7 +25,7 @@ public interface JpaConst {
         String EMP_COL_CREATED_AT = "created_at"; //登録日時
         String EMP_COL_UPDATED_AT = "updated_at"; //更新日時
         String EMP_COL_DELETE_FLAG = "delete_flag"; //削除フラグ
-        String EMP_COL_IN_DEP = "dep_id";//所属する店舗
+        String EMP_COL_IN_DEP = "department_id";//所属する店舗
         String EMP_COL_IN_STO = "store_id";//所属する店舗
 
         int ROLE_ADMIN = 1; //管理者権限ON(管理者)
@@ -149,7 +149,7 @@ public interface JpaConst {
         //すべての店舗データをid順に降順に取得
         String Q_STO_GET_ALL = ENTITY_STO + ".getAll";
         String Q_STO_GET_ALL_DEF = "SELECT s FROM Store AS s ORDER BY s.id DESC";
-        //指定した部署を取得する
+        //指定した店舗を取得する
         String Q_STO_GET_BY_ID = ENTITY_STO + ".getEmpSto";
         String Q_STO_GET_BY_ID_DEF = "SELECT s FROM Store AS s WHERE s.id = :" + JPQL_PARM_EMPLOYEE;
         //店舗データの件数を取得する

@@ -135,7 +135,7 @@ public class StoreService extends ServiceBase {
     public void removeDepartment(StoreView store) {
 
         Store sto =(Store)em.createNamedQuery(JpaConst.Q_STO_GET_BY_ID,Store.class)
-                                            .setParameter(JpaConst.JPQL_PARM_EMPLOYEE,StoreConverter.toModel(store))
+                                            .setParameter(JpaConst.JPQL_PARM_EMPLOYEE,store.getId())
                                             .getSingleResult();
 
 

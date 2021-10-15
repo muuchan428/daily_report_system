@@ -40,7 +40,7 @@ public class StoreAction extends ActionBase {
 
 
         putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-        putRequestScope(AttributeConst.DEPARTMENT, new StoreView()); //空の部署インスタンス
+        putRequestScope(AttributeConst.STORE, new StoreView()); //空の店舗インスタンス
 
         //新規登録画面を表示
         forward(ForwardConst.FW_STO_NEW);
@@ -83,12 +83,12 @@ public class StoreAction extends ActionBase {
 
         if(checkAdmin()) {
 
-        //idを条件に従業員データを取得する
+        //idを条件に店舗データを取得する
         StoreView sv = storeService.findOne(toNumber(getRequestParam(AttributeConst.STO_ID)));
 
 
         putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-        putRequestScope(AttributeConst.STORE, sv); //取得した従業員情報
+        putRequestScope(AttributeConst.STORE, sv); //取得した店舗情報
 
         //編集画面を表示する
         forward(ForwardConst.FW_STO_EDIT);
@@ -105,21 +105,21 @@ public class StoreAction extends ActionBase {
         //CSRF対策 tokenのチェック
         if (checkAdmin() && checkToken()) {
 
-            //パラメータの値を元に部署情報のインスタンスを作成する
+            //パラメータの値を元に店舗情報のインスタンスを作成する
 
 
                 StoreView sv = new StoreView(
                         null,
                        getRequestParam(AttributeConst.STO_CODE),
                        getRequestParam(AttributeConst.STO_NAME));
-                //部署情報登録
+                //店舗情報登録
                 List<String> errors = storeService.create(sv);
 
                 if (errors.size() > 0) {
                     //登録中にエラーがあった場合
 
                     putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-                    putRequestScope(AttributeConst.STORE, sv); //入力された部署情報
+                    putRequestScope(AttributeConst.STORE, sv); //入力された店舗情報
                     putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
 
                     //新規登録画面を再表示
@@ -143,20 +143,20 @@ public class StoreAction extends ActionBase {
 
         //CSRF対策 tokenのチェック
         if (checkAdmin() && checkToken()) {
-            //パラメータの値を元に部署情報のインスタンスを作成する
+            //パラメータの値を元に店舗情報のインスタンスを作成する
             StoreView sv = new StoreView(
                     toNumber(getRequestParam(AttributeConst.STO_ID)),
                     getRequestParam(AttributeConst.STO_CODE),
                     getRequestParam(AttributeConst.STO_NAME));
 
-            //部署情報更新
+            //店舗情報更新
             List<String> errors = storeService.update(sv);
 
             if (errors.size() > 0) {
                 //更新中にエラーが発生した場合
 
                 putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-                putRequestScope(AttributeConst.STORE, sv); //入力された従業員情報
+                putRequestScope(AttributeConst.STORE, sv); //入力された店舗情報
                 putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
 
                 //編集画面を再表示
@@ -166,14 +166,14 @@ public class StoreAction extends ActionBase {
 
                 //セッションに更新完了のフラッシュメッセージを設定
                 putSessionScope(AttributeConst.FLUSH, MessageConst.I_UPDATED.getMessage());
-
+                System.out.println("update");
                 //一覧画面にリダイレクト
                 redirect(ForwardConst.ACT_DEP, ForwardConst.CMD_INDEX);
             }
         }
     }
     /**
-     * 指定された部署に所属している従業員がいないかを確認し、いなければ部署を削除する
+     * 指定された店舗に所属している従業員がいないかを確認し、いなければデータを削除する
      * 1人以上いる場合はエラーメッセージを表示し、Show画面にリダイレクト
      * @throws ServletException
      * @throws IOException
@@ -190,7 +190,7 @@ public class StoreAction extends ActionBase {
             if(countEmp == 0) {
                 //所属している従業員の数が０の場合
 
-                //指定した部署を削除する
+                //指定した店舗を削除する
             storeService.removeDepartment(store);
 
             //セッションに削除完了のフラッシュメッセージを設定
@@ -203,9 +203,10 @@ public class StoreAction extends ActionBase {
 
                 //エラーメッセージを設定
                 putRequestScope(AttributeConst.ERR, MessageConst.E_NOT_DELETE_DEP_STO.getMessage() );
-
-                //詳細画面にリダイレクト
-                redirect(ForwardConst.ACT_STO, ForwardConst.CMD_SHOW);
+                putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+                putRequestScope(AttributeConst.STORE, store); //入力された店舗情報
+                //編集画面を再表示
+                forward(ForwardConst.FW_STO_EDIT);
             }
         }
     }

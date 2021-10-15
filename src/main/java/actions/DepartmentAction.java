@@ -40,9 +40,10 @@ public class DepartmentAction extends ActionBase {
         if(checkAdmin()) {
         //指定されたページ数の一覧画面に表示するデータを取得
         int depPage = getPage();
+        int stoPage = getStorePage();
         List<DepartmentView> departments = departmentService.getPerPage(depPage);
 
-        int stoPage = getPage();
+
         List<StoreView> stores = storeService.getPerPage(stoPage);
 
         //全ての部署、店舗データの件数を取得
@@ -198,7 +199,7 @@ public class DepartmentAction extends ActionBase {
                 //更新中にエラーが発生した場合
 
                 putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-                putRequestScope(AttributeConst.DEPARTMENT, dv); //入力された従業員情報
+                putRequestScope(AttributeConst.DEPARTMENT, dv); //入力された部署情報
                 putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
 
                 //編集画面を再表示
@@ -245,9 +246,9 @@ public class DepartmentAction extends ActionBase {
 
                 //エラーメッセージを設定
                 putRequestScope(AttributeConst.ERR, MessageConst.E_NOT_DELETE_DEP_STO.getMessage() );
+                putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+                putRequestScope(AttributeConst.DEPARTMENT, department); //入力された従業員情報
 
-                //詳細画面にリダイレクト
-                redirect(ForwardConst.ACT_DEP, ForwardConst.CMD_SHOW);
             }
         }
     }

@@ -38,7 +38,7 @@
         <script>
             function confirmCreate() {
                 if (confirm("フォローしますか？")) {
-                    document.forms[0].submit();
+                    document.forms[1].submit();
                 }
             }
         </script>
@@ -55,7 +55,7 @@
         <script>
             function confirmDestroy() {
                 if (confirm("フォロー解除しますか？")) {
-                    document.forms[0].submit();
+                    document.forms[1].submit();
                 }
             }
         </script>

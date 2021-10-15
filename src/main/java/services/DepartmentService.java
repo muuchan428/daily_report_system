@@ -136,7 +136,7 @@ public class DepartmentService extends ServiceBase {
     public void removeDepartment(DepartmentView department) {
 
         Department dep = (Department)em.createNamedQuery(JpaConst.Q_DEP_GET_BY_ID,Department.class)
-                                            .setParameter(JpaConst.JPQL_PARM_EMPLOYEE,DepartmentConverter.toModel(department))
+                                            .setParameter(JpaConst.JPQL_PARM_EMPLOYEE,department.getId())
                                             .getSingleResult();
 
 
