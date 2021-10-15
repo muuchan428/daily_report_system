@@ -26,6 +26,7 @@ public enum ForwardConst {
     CMD_EDIT("edit"),
     CMD_UPDATE("update"),
     CMD_DESTROY("destroy"),
+    CMD_SEARCH("search"),
 
     //id
     ID("id"),
@@ -39,6 +40,7 @@ public enum ForwardConst {
     FW_EMP_SHOW("employees/show"),
     FW_EMP_NEW("employees/new"),
     FW_EMP_EDIT("employees/edit"),
+    FW_EMP_SEARCH("employees/search"),
     FW_REP_INDEX("reports/index"),
     FW_REP_SHOW("reports/show"),
     FW_REP_NEW("reports/new"),
@@ -47,7 +49,11 @@ public enum ForwardConst {
     FW_FOL_SHOW("follows/show"),
     FW_DEP_INDEX("department/index"),
     FW_DEP_EDIT("department/edit"),
-    FW_DEP_NEW("department/new");
+    FW_DEP_NEW("department/new"),
+    FW_DEP_SHOW("department/show"),
+    FW_STO_EDIT("store/edit"),
+    FW_STO_SHOW("store/show"),
+    FW_STO_NEW("store/new");
 
 
     /**

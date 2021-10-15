@@ -13,6 +13,7 @@ public enum AttributeConst {
     //一覧画面共通
     MAX_ROW("maxRow"),
     PAGE("page"),
+    STO_PAGE("storePage"),
 
     //入力フォーム共通
     TOKEN("_token"),
@@ -31,8 +32,11 @@ public enum AttributeConst {
     EMP_ID("id"),
     EMP_CODE("code"),
     EMP_PASS("password"),
-    EMP_NAME("name"),
+    EMP_F_NAME("firstName"),
+    EMP_L_NAME("lastName"),
     EMP_ADMIN_FLG("admin_flag"),
+    EMP_DEP("department"),
+    EMP_STO("store"),
 
     //管理者フラグ
     ROLE_ADMIN(1),
@@ -57,7 +61,26 @@ public enum AttributeConst {
     FOL_COUNT("follow_count"),
     FOL_ID("id"),
     FOL_EMP("follow_employee"),
-    FOL_CHECK("follow_check");
+    FOL_CHECK("follow_check"),
+
+    //部署、店舗管理
+    DEPARTMENT("department"),
+    DEPARTMENTS("departments"),
+    DEP_COUNT("departments_count"),
+    DEP_ID("id"),
+    DEP_CODE("department_code"),
+    DEP_NAME("department_name"),
+
+    STORE("store"),
+    STORES("stores"),
+    STO_COUNT("stores_count"),
+    STO_ID("id"),
+    STO_CODE("store_code"),
+    STO_NAME("store_name"),
+
+    //検索関連
+    SEARCH_WORD("word"),
+    SEARCH_RESULT("result");
 
 
     private final String text;

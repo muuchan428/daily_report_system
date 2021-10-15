@@ -18,12 +18,15 @@ public interface JpaConst {
         //従業員テーブルカラム
         String EMP_COL_ID = "id"; //id
         String EMP_COL_CODE = "code"; //社員番号
-        String EMP_COL_NAME = "name"; //氏名
+        String EMP_COL_F_NAME = "first_name"; //名前
+        String EMP_COL_L_NAME = "last_name";//苗字
         String EMP_COL_PASS = "password"; //パスワード
         String EMP_COL_ADMIN_FLAG = "admin_flag"; //管理者権限
         String EMP_COL_CREATED_AT = "created_at"; //登録日時
         String EMP_COL_UPDATED_AT = "updated_at"; //更新日時
         String EMP_COL_DELETE_FLAG = "delete_flag"; //削除フラグ
+        String EMP_COL_IN_DEP = "dep_id";//所属する店舗
+        String EMP_COL_IN_STO = "store_id";//所属する店舗
 
         int ROLE_ADMIN = 1; //管理者権限ON(管理者)
         int ROLE_GENERAL = 0; //管理者権限OFF(一般)
@@ -54,6 +57,7 @@ public interface JpaConst {
         String DEP_COL_ID ="id";//id
         String DEP_COL_CODE = "code";//部署番号
         String DEP_COL_NAME = "name";//部署名
+
         //店舗テーブル
         String TABLE_STO = "stores";//テーブル名
         //店舗テーブルカラム
@@ -75,6 +79,8 @@ public interface JpaConst {
         String JPQL_PARM_CODE = "code"; //社員番号
         String JPQL_PARM_PASSWORD = "password"; //パスワード
         String JPQL_PARM_EMPLOYEE = "employee"; //従業員
+        String JPQL_PARM_L_NAME = "lastName";//姓
+        String JPQL_PARM_F_NAME = "firstName";//名
         String JPQL_PARM_FOLLOW = "follow_employee";//フォローされた従業員
         String JPQL_PARM_DEPARTMENT = "department";//部署
         String JPQL_PARM_STORE = "store";//店舗
@@ -139,7 +145,7 @@ public interface JpaConst {
         String Q_DEP_COUNT_RESISTERED_BY_CODE_DEF = "SELECT COUNT(d) FROM Department AS d WHERE d.code = :" + JPQL_PARM_CODE;
         //指定した部署に所属している従業員の件数を取得する
         String Q_EMP_COUNT_IN_DEP = ENTITY_EMP +".countDep";
-        String Q_EMP_COUNT_IN_DEP_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.department_id = :" + JPQL_PARM_DEPARTMENT;
+        String Q_EMP_COUNT_IN_DEP_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.department = :" + JPQL_PARM_DEPARTMENT;
         //すべての店舗データをid順に降順に取得
         String Q_STO_GET_ALL = ENTITY_STO + ".getAll";
         String Q_STO_GET_ALL_DEF = "SELECT s FROM Store AS s ORDER BY s.id DESC";
@@ -154,5 +160,13 @@ public interface JpaConst {
         String Q_STO_COUNT_RESISTERED_BY_CODE_DEF = "SELECT COUNT(s) FROM Store AS s WHERE s.code = :" + JPQL_PARM_CODE;
         //指定した部署に所属している従業員の件数を取得する
         String Q_EMP_COUNT_IN_STO = ENTITY_EMP +".countStore";
-        String Q_EMP_COUNT_IN_STO_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.store_id = :" + JPQL_PARM_STORE;
+        String Q_EMP_COUNT_IN_STO_DEF = "SELECT COUNT(e) FROM Employee AS e WHERE e.store = :" + JPQL_PARM_STORE;
+
+        //姓名を条件に従業員のデータを取得
+        String Q_EMP_GET_SEARCH_NAME = ENTITY_EMP + ".searchName";
+        String Q_EMP_GET_SEARCH_NAME_DEF = "SELECT e FROM Employee AS e WHERE  e.firstName LIKE : " + JPQL_PARM_EMPLOYEE + " OR e.lastName LIKE : " + JPQL_PARM_EMPLOYEE + " ORDER BY e.id DESC";
+
+        //姓を条件に従業員データを取得
+        String Q_EMP_GET_SEARCH_FULL_NAME = ENTITY_EMP + ".searchFullName";
+        String Q_EMP_GET_SEARCH_FULL_NAME_DEF = "SELECT e FROM Employee AS e WHERE e.lastName LIKE : " + JPQL_PARM_L_NAME + " AND e.firstName LIKE : " + JPQL_PARM_F_NAME +" ORDER BY e.id DESC";
 }
