@@ -32,9 +32,13 @@ public class EmployeeValidator {
         }
 
         //氏名のチェック
-        String nameError = validateName(ev.getName());
-        if (!nameError.equals("")) {
-            errors.add(nameError);
+        String firstNameError = validateName(ev.getFirstName());
+        if (!firstNameError.equals("")) {
+            errors.add(firstNameError);
+        }
+        String lastNameError = validateName(ev.getLastName());
+        if (!lastNameError.equals("")) {
+            errors.add(lastNameError);
         }
 
         //パスワードのチェック

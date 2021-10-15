@@ -1,20 +1,25 @@
 package actions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 
+import actions.views.DepartmentView;
 import actions.views.EmployeeView;
 import actions.views.ReportView;
+import actions.views.StoreView;
 import constants.AttributeConst;
 import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
 import constants.PropertyConst;
+import services.DepartmentService;
 import services.EmployeeService;
 import services.FollowService;
 import services.ReportService;
+import services.StoreService;
 
 /**
  * 従業員に関わる処理を行うActionクラス
@@ -25,6 +30,8 @@ public class EmployeeAction extends ActionBase {
     private EmployeeService service;
     private FollowService followService;
     private ReportService reportService;
+    private DepartmentService departmentService;
+    private StoreService storeService;
 
 
     /**
@@ -36,6 +43,8 @@ public class EmployeeAction extends ActionBase {
         service = new EmployeeService();
         followService = new FollowService();
         reportService = new ReportService();
+        departmentService = new DepartmentService();
+        storeService = new StoreService();
 
 
         //メソッドを実行
@@ -44,6 +53,8 @@ public class EmployeeAction extends ActionBase {
         service.close();
         followService.close();
         reportService.close();
+        departmentService.close();
+        storeService.close();
     }
 
     /**
@@ -90,8 +101,11 @@ public class EmployeeAction extends ActionBase {
         //
         if(checkAdmin()) {
 
-
-        putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
+            List<DepartmentView> departments = departmentService.getAllDep();
+            List<StoreView> stores = storeService.getAllStore();
+            putRequestScope(AttributeConst.STORES, stores);//取得した店舗リスト
+            putRequestScope(AttributeConst.DEPARTMENTS,departments);//取得した部署リスト
+         putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
         putRequestScope(AttributeConst.EMPLOYEE, new EmployeeView()); //空の従業員インスタンス
 
         //新規登録画面を表示
@@ -108,17 +122,26 @@ public class EmployeeAction extends ActionBase {
 
         //CSRF対策 tokenのチェック
         if (checkAdmin() && checkToken()) {
+          //idを条件に部署データを取得する
+            DepartmentView dv = departmentService.findOne(toNumber(getRequestParam(AttributeConst.EMP_DEP)));
+          //idを条件に店舗データを取得する
+            StoreView sv = storeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_STO)));
 
             //パラメータの値を元に従業員情報のインスタンスを作成する
             EmployeeView ev = new EmployeeView(
                     null,
                     getRequestParam(AttributeConst.EMP_CODE),
-                    getRequestParam(AttributeConst.EMP_NAME),
+                    getRequestParam(AttributeConst.EMP_F_NAME),
+                    getRequestParam(AttributeConst.EMP_L_NAME),
                     getRequestParam(AttributeConst.EMP_PASS),
                     toNumber(getRequestParam(AttributeConst.EMP_ADMIN_FLG)),
                     null,
                     null,
-                    AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
+                    AttributeConst.DEL_FLAG_FALSE.getIntegerValue(),
+                    dv,
+                    sv);
+
+                    ;
 
             //アプリケーションスコープからpepper文字列を取得
             String pepper = getContextScope(PropertyConst.PEPPER);
@@ -221,7 +244,11 @@ public class EmployeeAction extends ActionBase {
             forward(ForwardConst.FW_ERR_UNKNOWN);
             return;
         }
+        List<DepartmentView> departments = departmentService.getAllDep();
+        List<StoreView> stores = storeService.getAllStore();
 
+        putRequestScope(AttributeConst.STORES, stores);//取得した店舗リスト
+        putRequestScope(AttributeConst.DEPARTMENTS,departments);//取得した部署リスト
         putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
         putRequestScope(AttributeConst.EMPLOYEE, ev); //取得した従業員情報
 
@@ -229,6 +256,29 @@ public class EmployeeAction extends ActionBase {
         forward(ForwardConst.FW_EMP_EDIT);
         }
 
+    }
+/**
+ * 検索キーワードから従業員検索を行う
+ * @throws ServletException
+ * @throws IOException
+ */
+    public void search() throws ServletException, IOException {
+        String word =getRequestParam(AttributeConst.SEARCH_WORD);
+        List<EmployeeView> ev = new ArrayList<EmployeeView>();
+        if(word != "") {
+            if(service.searchEmployee(word) != null) {
+         ev.addAll(service.searchEmployee(word));
+            }
+         putRequestScope(AttributeConst.ERR,null );
+        } else {
+            putRequestScope(AttributeConst.ERR, "検索キーワードを入力してください");
+        }
+
+        putRequestScope(AttributeConst.SEARCH_WORD, word);
+        putRequestScope(AttributeConst.EMPLOYEES, ev);
+
+        //検索結果画面を表示する
+        forward(ForwardConst.FW_EMP_SEARCH);
     }
 
     /**
@@ -240,16 +290,23 @@ public class EmployeeAction extends ActionBase {
 
         //CSRF対策 tokenのチェック
         if (checkAdmin() && checkToken()) {
+            //idを条件に部署データを取得する
+            DepartmentView dv = departmentService.findOne(toNumber(getRequestParam(AttributeConst.EMP_DEP)));
+          //idを条件に店舗データを取得する
+            StoreView sv = storeService.findOne(toNumber(getRequestParam(AttributeConst.EMP_STO)));
             //パラメータの値を元に従業員情報のインスタンスを作成する
             EmployeeView ev = new EmployeeView(
                     toNumber(getRequestParam(AttributeConst.EMP_ID)),
                     getRequestParam(AttributeConst.EMP_CODE),
-                    getRequestParam(AttributeConst.EMP_NAME),
+                    getRequestParam(AttributeConst.EMP_F_NAME),
+                    getRequestParam(AttributeConst.EMP_L_NAME),
                     getRequestParam(AttributeConst.EMP_PASS),
                     toNumber(getRequestParam(AttributeConst.EMP_ADMIN_FLG)),
                     null,
                     null,
-                    AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
+                    AttributeConst.DEL_FLAG_FALSE.getIntegerValue(),
+                    dv,
+                    sv);
 
             //アプリケーションスコープからpepper文字列を取得
             String pepper = getContextScope(PropertyConst.PEPPER);

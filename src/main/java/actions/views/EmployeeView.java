@@ -30,7 +30,9 @@ public class EmployeeView {
     /**
      * 氏名
      */
-    private String name;
+    private String firstName;
+
+    private String lastName;
 
     /**
      * パスワード
@@ -56,6 +58,13 @@ public class EmployeeView {
      * 削除された従業員かどうか（現役：0、削除済み：1）
      */
     private Integer deleteFlag;
-
+    /**
+     * 所属部署
+     */
+    private DepartmentView department;
+    /**
+     * 所属店舗
+     */
+    private StoreView Store;
 
 }

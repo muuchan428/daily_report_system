@@ -9,7 +9,7 @@ public class DepartmentConverter {
 
     /**
      * ViewモデルのインスタンスからDTOモデルのインスタンスを作成する
-     * @param dv FollowViewのインスタンス
+     * @param dv departmentViewのインスタンス
      * @return Departmentのインスタンス
      */
     public static Department toModel(DepartmentView dv) {

@@ -1,11 +1,13 @@
 package services;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.NoResultException;
 
 import actions.views.EmployeeConverter;
 import actions.views.EmployeeView;
+import actions.views.StoreView;
 import actions.views.DepartmentView;
 import constants.JpaConst;
 import models.Employee;
@@ -154,8 +156,11 @@ public class EmployeeService extends ServiceBase {
                     EncryptUtil.getPasswordEncrypt(ev.getPassword(), pepper));
         }
 
-        savedEmp.setName(ev.getName()); //変更後の氏名を設定する
+        savedEmp.setFirstName(ev.getFirstName()); //変更後の氏名を設定する
+        savedEmp.setLastName(ev.getLastName());
         savedEmp.setAdminFlag(ev.getAdminFlag()); //変更後の管理者フラグを設定する
+        savedEmp.setDepartment(ev.getDepartment());
+        savedEmp.setStore(ev.getStore());
 
         //更新日時に現在時刻を設定する
         LocalDateTime today = LocalDateTime.now();
@@ -193,9 +198,24 @@ public class EmployeeService extends ServiceBase {
         update(savedEmp);
 
     }
-
+    /**
+     * 指定された部署に所属する従業員の数を取得し返却する
+     * @param dv
+     * @return dvに所属する従業員の人数
+     */
     public long countInDepartment(DepartmentView dv) {
         long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_IN_DEP, Long.class)
+                .getSingleResult();
+
+        return empCount;
+    }
+    /**
+     * 指定された店舗に所属する従業員の数を取得し返却する
+     * @param sv
+     * @return svに所属する従業員の人数
+     */
+    public long countInStore(StoreView sv) {
+        long empCount = (long) em.createNamedQuery(JpaConst.Q_EMP_COUNT_IN_STO, Long.class)
                 .getSingleResult();
 
         return empCount;
@@ -223,6 +243,36 @@ public class EmployeeService extends ServiceBase {
         //認証結果を返却する
         return isValidEmployee;
     }
+
+    /**
+     * 名前を条件に従業員データを取得し返却する
+     */
+    public List<EmployeeView> searchEmployee(String name){
+        List<EmployeeView> evs = new ArrayList<EmployeeView>();
+        name = name.replace("　", " ");
+        String[] en = name.split(" ");//空白の前後で文字列を分ける
+
+        //
+        if( en.length == 1) {//姓名どちらかのみの場合
+          List<EmployeeView> result = searchName(en[0]);
+          if(result != null)
+            evs.addAll(result);
+
+        } else if(en.length == 2){//姓名どちらも入力された場合
+            List<EmployeeView> result = searchName(en[0], en[1]);
+                    evs.addAll(result);
+
+                }
+
+        if(evs.size() != 0) {
+
+        return evs;
+        } else {
+            System.out.println("return null2");
+            return null;
+        }
+        }
+
 
     /**
      * idを条件にデータを1件取得し、Employeeのインスタンスで返却する
@@ -261,4 +311,30 @@ public class EmployeeService extends ServiceBase {
 
     }
 
+    private List<EmployeeView> searchName(String name){
+        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_SEARCH_NAME, Employee.class)
+                                            .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, "%" + name + "%")
+                                            .getResultList();
+        System.out.println("employees.size =" + employees.size());
+
+        if(employees.size() != 0 ) {
+        return EmployeeConverter.toViewList(employees);
+        } else {
+
+            return null;
+        }
+    }
+
+    private List<EmployeeView> searchName(String lastName, String firstName){
+        List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_SEARCH_FULL_NAME, Employee.class)
+                                            .setParameter(JpaConst.JPQL_PARM_L_NAME, "%" +lastName + "%")
+                                            .setParameter(JpaConst.JPQL_PARM_F_NAME,"%" + firstName + "%")
+                                            .getResultList();
+
+        if(employees.size() != 0) {
+        return EmployeeConverter.toViewList(employees);
+        } else {
+            return null;
+        }
+    }
 }

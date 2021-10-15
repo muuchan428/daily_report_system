@@ -23,7 +23,8 @@ public class EmployeeConverter {
         return new Employee(
                 ev.getId(),
                 ev.getCode(),
-                ev.getName(),
+                ev.getFirstName(),
+                ev.getLastName(),
                 ev.getPassword(),
                 ev.getAdminFlag() == null
                         ? null
@@ -36,7 +37,11 @@ public class EmployeeConverter {
                         ? null
                         : ev.getDeleteFlag() == AttributeConst.DEL_FLAG_TRUE.getIntegerValue()
                                 ? JpaConst.EMP_DEL_TRUE
-                                : JpaConst.EMP_DEL_FALSE);
+                                : JpaConst.EMP_DEL_FALSE,
+                 DepartmentConverter.toModel(ev.getDepartment()),
+                 StoreConverter.toModel(ev.getStore())
+
+                );
     }
 
     /**
@@ -53,7 +58,8 @@ public class EmployeeConverter {
         return new EmployeeView(
                 e.getId(),
                 e.getCode(),
-                e.getName(),
+                e.getFirstName(),
+                e.getLastName(),
                 e.getPassword(),
                 e.getAdminFlag() == null
                         ? null
@@ -66,7 +72,10 @@ public class EmployeeConverter {
                         ? null
                         : e.getDeleteFlag() == JpaConst.EMP_DEL_TRUE
                                 ? AttributeConst.DEL_FLAG_TRUE.getIntegerValue()
-                                : AttributeConst.DEL_FLAG_FALSE.getIntegerValue());
+                                : AttributeConst.DEL_FLAG_FALSE.getIntegerValue(),
+                DepartmentConverter.toView(e.getDepartment()),
+                StoreConverter.toView(e.getStore())
+                );
     }
 
     /**
@@ -92,12 +101,15 @@ public class EmployeeConverter {
     public static void copyViewToModel(Employee e, EmployeeView ev) {
         e.setId(ev.getId());
         e.setCode(ev.getCode());
-        e.setName(ev.getName());
+        e.setFirstName(ev.getFirstName());
+        e.setLastName(ev.getLastName());
         e.setPassword(ev.getPassword());
         e.setAdminFlag(ev.getAdminFlag());
         e.setCreatedAt(ev.getCreatedAt());
         e.setUpdatedAt(ev.getUpdatedAt());
         e.setDeleteFlag(ev.getDeleteFlag());
+        e.setDepartment(DepartmentConverter.toModel(ev.getDepartment()));
+        e.setStore(StoreConverter.toModel(ev.getStore()));
 
     }
 }

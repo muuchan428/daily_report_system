@@ -1,5 +1,6 @@
 @charset "UTF-8";
 
+
 body{
     color:#333333;
     font-family:"Hiragino kaku Gothic Pro",Meiryo,"MS PGothic",Helvetica,Arial,sans-serif;
@@ -116,7 +117,7 @@ select {
 }
 
 #header_menu {
-    width: 57%;
+    width: 63%;
     padding-top: 17px;
     padding-left: 3%;
     display: inline-block;
@@ -124,7 +125,7 @@ select {
 
 #employee_name {
     color: #cccccc;
-    width: 36%;
+    width: 30%;
     padding-right: 3%;
     text-align: right;
     display: inline-block;
@@ -177,5 +178,22 @@ h3 {
      padding: 13px 15px ;
      border-radius: 10px;
 }
+.search input{
+    width: 7em;
+    padding-top:3px;
+    padding-bottom:3px;
+    display:inline;
+    font-size :14px;
+    border: none;
+}
+.search button{
+        font-size: 14px;
+    padding: 3px 8px;
+    border : none;
 
+    display:inline;
+}
+.search {
+    display:inline;
+}
 

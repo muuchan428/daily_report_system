@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -37,7 +39,19 @@ import lombok.Setter;
             query = JpaConst.Q_EMP_GET_BY_CODE_AND_PASS_DEF),
     @NamedQuery(
             name =JpaConst.Q_EMP_GET_ALL_FOL,
-            query =JpaConst.Q_EMP_GET_ALL_FOL_DEF)
+            query =JpaConst.Q_EMP_GET_ALL_FOL_DEF),
+    @NamedQuery(
+            name =JpaConst.Q_EMP_COUNT_IN_DEP,
+            query =JpaConst.Q_EMP_COUNT_IN_DEP_DEF),
+    @NamedQuery(
+            name =JpaConst.Q_EMP_COUNT_IN_STO,
+            query =JpaConst.Q_EMP_COUNT_IN_STO_DEF),
+    @NamedQuery(
+            name =JpaConst.Q_EMP_GET_SEARCH_NAME,
+            query =JpaConst.Q_EMP_GET_SEARCH_NAME_DEF),
+    @NamedQuery(
+            name =JpaConst.Q_EMP_GET_SEARCH_FULL_NAME,
+            query =JpaConst.Q_EMP_GET_SEARCH_FULL_NAME_DEF)
 })
 
 @Getter //全てのクラスフィールドについてgetterを自動生成する(Lombok)
@@ -68,8 +82,11 @@ public class Employee {
      * 氏名
      */
 
-    @Column(name = JpaConst.EMP_COL_NAME, nullable = false)
-    private String name;
+    @Column(name = JpaConst.EMP_COL_F_NAME, nullable = false)
+    private String firstName;
+
+    @Column(name = JpaConst.EMP_COL_L_NAME, nullable = false)
+    private String lastName;
 
     /**
      * パスワード
@@ -100,4 +117,18 @@ public class Employee {
      */
     @Column(name = JpaConst.EMP_COL_DELETE_FLAG, nullable = false)
     private Integer deleteFlag;
+
+    /**
+     * 所属する部署
+     */
+    @ManyToOne
+    @JoinColumn(name = JpaConst.EMP_COL_IN_DEP, nullable = false)
+    private Department department;
+
+    /**
+     * 所属する店舗
+     */
+    @ManyToOne
+    @JoinColumn(name = JpaConst.EMP_COL_IN_STO, nullable = false)
+    private Store store;
 }

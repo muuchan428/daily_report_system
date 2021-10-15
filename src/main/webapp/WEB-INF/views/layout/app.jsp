@@ -7,10 +7,12 @@
 <c:set var="actEmp" value="${ForwardConst.ACT_EMP.getValue()}" />
 <c:set var="actRep" value="${ForwardConst.ACT_REP.getValue()}" />
 <c:set var="actFol" value="${ForwardConst.ACT_FOL.getValue()}" />
+<c:set var="actDep" value="${ForwardConst.ACT_DEP.getValue()}" />
 <c:set var="actAuth" value="${ForwardConst.ACT_AUTH.getValue()}" />
 
 <c:set var="commIdx" value="${ForwardConst.CMD_INDEX.getValue()}" />
 <c:set var="commOut" value="${ForwardConst.CMD_LOGOUT.getValue()}" />
+<c:set var="commSrc" value="${ForwardConst.CMD_SEARCH.getValue()}" />
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -28,14 +30,19 @@
                 <c:if test="${sessionScope.login_employee != null}">
                     <c:if test="${sessionScope.login_employee.adminFlag == AttributeConst.ROLE_ADMIN.getIntegerValue()}">
                         <a href="<c:url value='?action=${actEmp}&command=${commIdx}' />">従業員管理</a>&nbsp;
+
                     </c:if>
                     <a href="<c:url value='?action=${actRep}&command=${commIdx}' />">日報管理</a>&nbsp;
-                    <a href="<c:url value='?action=${actFol}&command=${commIdx}' />">フォロー管理</a>&nbsp;
+                    <a href="<c:url value='?action=${actFol}&command=${commIdx}' />">フォロー管理</a>&nbsp;&nbsp;
+ <form method="POST" class="search"
+            action="<c:url value='?action=${actEmp}&command=${commSrc}' />">
+<input type="text"  name="${AttributeConst.SEARCH_WORD.getValue()}" value="${word}"placeholder=" 姓 名を入力"/><button type="submit" >検索</button>
+</form>
                 </c:if>
             </div>
             <c:if test="${sessionScope.login_employee != null}">
                 <div id="employee_name">
-                    <c:out value="${sessionScope.login_employee.name}" />
+                    <c:out value="${sessionScope.login_employee.lastName}" />&nbsp;<c:out value="${sessionScope.login_employee.firstName}"/>
                     &nbsp;さん&nbsp;&nbsp;&nbsp;
                     <a href="<c:url value='?action=${actAuth}&command=${commOut}' />">ログアウト</a>
                 </div>
