@@ -19,8 +19,12 @@
 <input type="text" name="${AttributeConst.EMP_CODE.getValue()}" value="${employee.code}" />
 <br /><br />
 
-<label for="${AttributeConst.EMP_NAME.getValue()}">氏名</label><br />
-<input type="text" name="${AttributeConst.EMP_NAME.getValue()}" value="${employee.name}" />
+<label for="${AttributeConst.EMP_L_NAME.getValue()}">姓</label><br />
+<input type="text" name="${AttributeConst.EMP_L_NAME.getValue()}" value="${employee.lastName}" />
+<br />
+<label for="${AttributeConst.EMP_F_NAME.getValue()}">名</label><br />
+<input type="text" name="${AttributeConst.EMP_F_NAME.getValue()}" value="${employee.firstName}" />
+
 <br /><br />
 
 <label for="${AttributeConst.EMP_PASS.getValue()}">パスワード</label><br />
@@ -31,6 +35,22 @@
 <select name="${AttributeConst.EMP_ADMIN_FLG.getValue()}">
     <option value="${AttributeConst.ROLE_GENERAL.getIntegerValue()}"<c:if test="${employee.adminFlag == AttributeConst.ROLE_GENERAL.getIntegerValue()}"> selected</c:if>>一般</option>
     <option value="${AttributeConst.ROLE_ADMIN.getIntegerValue()}"<c:if test="${employee.adminFlag == AttributeConst.ROLE_ADMIN.getIntegerValue()}"> selected</c:if>>管理者</option>
+</select>
+<br /><br />
+
+<label for="${AttributeConst.EMP_DEP.getValue()}">部署</label><br />
+<select name="${AttributeConst.EMP_DEP.getValue()}">
+<c:forEach var="department"  items="${departments}">
+    <option value="${department.id}"<c:if test="${employee.department.id == department.id}">selected </c:if>>${department.name}</option>
+</c:forEach>
+</select>
+<br /><br />
+
+<label for="${AttributeConst.EMP_STO.getValue()}">店舗</label><br />
+<select name="${AttributeConst.EMP_STO.getValue()}">
+<c:forEach var="store"  items="${stores}">
+    <option value="${store.id}"<c:if test="${employee.store.id == store.id}">selected</c:if>>${store.name}</option>
+</c:forEach>
 </select>
 <br /><br />
 <input type="hidden" name="${AttributeConst.EMP_ID.getValue()}" value="${employee.id}" />

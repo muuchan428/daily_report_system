@@ -18,7 +18,7 @@
             <tbody>
                 <tr>
                     <th>氏名</th>
-                    <td><a href="<c:url value='?action=${actEmp}&command=${commShow}&id=${report.employee.id}' />"><c:out value="${report.employee.name}" /></a></td>
+                    <td><a href="<c:url value='?action=${actEmp}&command=${commShow}&id=${report.employee.id}' />"><c:out value="${report.employee.lastName}" />&nbsp;<c:out value="${report.employee.firstName}" /></a></td>
                 </tr>
                 <tr>
                     <th>日付</th>

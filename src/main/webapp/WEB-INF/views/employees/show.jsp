@@ -21,7 +21,7 @@
                 <c:out value="${flush}"></c:out>
             </div>
         </c:if>
-        <h2> ${employee.name}さん の 詳細ページ</h2>
+        <h2>${employee.lastName}&nbsp; ${employee.firstName}さん の 詳細ページ</h2>
 
         <c:if test="${login_employee.id.equals(employee.id) == false}">
         <c:choose>
@@ -72,15 +72,25 @@
                 </tr>
                 <tr>
                     <th>氏名</th>
-                    <td><c:out value="${employee.name}" /></td>
+                    <td><c:out value="${employee.lastName}" />&nbsp;<c:out value="${employee.firstName}" /></td>
                 </tr>
+
                 <tr>
+                                <tr>
+                    <th>部署</th>
+                    <td><c:out value="${employee.department.name}" /></td>
+                </tr>
+                 <tr>
+                    <th>店舗</th>
+                    <td><c:out value="${employee.store.name}" /></td>
+                </tr>
                     <th>権限</th>
                     <td><c:choose>
                             <c:when test="${employee.adminFlag == AttributeConst.ROLE_ADMIN.getIntegerValue()}">管理者</c:when>
                             <c:otherwise>一般</c:otherwise>
                         </c:choose></td>
                 </tr>
+
                 <tr>
                     <th>登録日時</th>
                     <fmt:parseDate value="${employee.createdAt}" pattern="yyyy-MM-dd'T'HH:mm:ss" var="createDay" type="date" />
@@ -122,7 +132,7 @@
                         <c:out value="${i}" />&nbsp;
                     </c:when>
                     <c:otherwise>
-                        <a href="<c:url value='?action=${actTop}&command=${commIdx}&page=${i}' />"><c:out value="${i}" /></a>&nbsp;
+                        <a href="<c:url value='?action=${actTop}&command=${commIdx}&id=${employee.id}&page=${i}' />"><c:out value="${i}" /></a>&nbsp;
                     </c:otherwise>
                 </c:choose>
             </c:forEach>

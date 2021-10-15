@@ -18,7 +18,7 @@
 <br /><br />
 
 <label for="name">氏名</label><br />
-<c:out value="${sessionScope.login_employee.name}" />
+<c:out value="${sessionScope.login_employee.lastName}" /><c:out value="${sessionScope.login_employee.firstName}" />
 <br /><br />
 
 <label for="${AttributeConst.REP_TITLE.getValue()}">タイトル</label><br />
