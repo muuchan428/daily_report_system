@@ -5,8 +5,11 @@ import java.util.List;
 
     import actions.views.DepartmentConverter;
     import actions.views.DepartmentView;
+import actions.views.EmployeeConverter;
+import actions.views.EmployeeView;
 import constants.JpaConst;
     import models.Department;
+import models.Employee;
 import models.validators.DepartmentValidator;
 
 public class DepartmentService extends ServiceBase {
@@ -18,6 +21,15 @@ public class DepartmentService extends ServiceBase {
         long depCount = (long)em.createNamedQuery(JpaConst.Q_DEP_COUNT_ALL, Long.class)
                                     .getSingleResult();
         return depCount;
+    }
+    /**
+     * すべての部署データを取得
+     */
+    public List<DepartmentView> getAllDep(){
+        List<Department> departments = em.createNamedQuery(JpaConst.Q_DEP_GET_ALL, Department.class)
+                                                                 .getResultList();
+        return DepartmentConverter.toViewList(departments);
+
     }
    /**
     * ページに表示する部署データを取得
@@ -85,8 +97,7 @@ public class DepartmentService extends ServiceBase {
 
     /**
      * 画面から入力された部署の更新内容を元にデータを1件作成し、部署テーブルを更新する
-     * @param ev 画面から入力された部署の登録内容
-     * @param pepper pepper文字列
+     * @param ｄv 画面から入力された部署の登録内容
      * @return バリデーションや更新処理中に発生したエラーのリスト
      */
     public List<String> update(DepartmentView dv) {
@@ -112,7 +123,7 @@ public class DepartmentService extends ServiceBase {
 
         //バリデーションエラーがなければデータを更新する
         if (errors.size() == 0) {
-            update(savedDep);
+            updateInternal(savedDep);
         }
 
         //エラーを返却（エラーがなければ0件の空リスト）
@@ -131,6 +142,19 @@ public class DepartmentService extends ServiceBase {
 
         em.getTransaction().begin();
         em.remove(dep);
+        em.getTransaction().commit();
+
+    }
+
+    /**
+     * データを更新する
+     * @param dv 画面から入力された部署の登録内容
+     */
+    private void updateInternal(DepartmentView dv) {
+
+        em.getTransaction().begin();
+        Department d = findOneInternal(dv.getId());
+        DepartmentConverter.copyViewToModel(d, dv);
         em.getTransaction().commit();
 
     }

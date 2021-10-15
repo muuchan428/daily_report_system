@@ -13,21 +13,25 @@ import constants.ForwardConst;
 import constants.JpaConst;
 import constants.MessageConst;
 import services.EmployeeService;
+import services.StoreService;
 import services.DepartmentService;
 
 public class DepartmentAction extends ActionBase {
         EmployeeService employeeService;
         DepartmentService departmentService;
+        StoreService storeService;
     @Override
     public void process() throws ServletException, IOException {
         employeeService = new EmployeeService();
         departmentService = new DepartmentService();
+        storeService = new StoreService();
 
         //メソッドを実行
         invoke();
 
         employeeService.close();
         departmentService.close();
+        storeService.close();
 
     }
     public void index() throws ServletException, IOException {
@@ -35,15 +39,22 @@ public class DepartmentAction extends ActionBase {
         //管理者かどうかのチェック
         if(checkAdmin()) {
         //指定されたページ数の一覧画面に表示するデータを取得
-        int page = getPage();
-        List<DepartmentView> departments = departmentService.getPerPage(page);
+        int depPage = getPage();
+        List<DepartmentView> departments = departmentService.getPerPage(depPage);
 
-        //全ての部署データの件数を取得
+        int stoPage = getPage();
+        List<StoreView> stores = storeService.getPerPage(stoPage);
+
+        //全ての部署、店舗データの件数を取得
         long departmentCount = departmentService.countAll();
+        long storeCount = storeService.countAll();
 
-        putRequestScope(AttributeConst.DEPARTMENTS, departments); //取得した従業員データ
-        putRequestScope(AttributeConst.DEP_COUNT, departmentCount); //全ての従業員データの件数
-        putRequestScope(AttributeConst.PAGE, page); //ページ数
+        putRequestScope(AttributeConst.DEPARTMENTS, departments); //取得した部署データ
+        putRequestScope(AttributeConst.STORES,stores);//取得した店舗データ
+        putRequestScope(AttributeConst.DEP_COUNT, departmentCount); //全ての部署データの件数
+        putRequestScope(AttributeConst.STO_COUNT, storeCount);//すべての店舗データの件数
+        putRequestScope(AttributeConst.STO_PAGE, stoPage);
+        putRequestScope(AttributeConst.PAGE, depPage); //ページ数
         putRequestScope(AttributeConst.MAX_ROW, JpaConst.ROW_PER_PAGE); //1ページに表示するレコードの数
 
         //セッションにフラッシュメッセージが設定されている場合はリクエストスコープに移し替え、セッションからは削除する
@@ -115,14 +126,11 @@ public class DepartmentAction extends ActionBase {
 
         if(checkAdmin()) {
 
-        //idを条件に従業員データを取得する
+        //idを条件に部署データを取得する
         DepartmentView dv = departmentService.findOne(toNumber(getRequestParam(AttributeConst.DEP_ID)));
 
-            //データが取得できなかった、場合はエラー画面を表示
-            forward(ForwardConst.FW_ERR_UNKNOWN);
-
         putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
-        putRequestScope(AttributeConst.EMPLOYEE, dv); //取得した従業員情報
+        putRequestScope(AttributeConst.DEPARTMENT, dv); //取得した部署情報
 
         //編集画面を表示する
         forward(ForwardConst.FW_DEP_EDIT);

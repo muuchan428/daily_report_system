@@ -11,7 +11,7 @@
 <c:import url="/WEB-INF/views/layout/app.jsp">
     <c:param name="content">
 
-        <h2>id : ${department.name} 部署 編集ページ</h2>
+        <h2> ${department.name} 編集ページ</h2>
         <form method="POST"
             action="<c:url value='?action=${action}&command=${commUpd}' />">
             <c:import url="_form.jsp" />
