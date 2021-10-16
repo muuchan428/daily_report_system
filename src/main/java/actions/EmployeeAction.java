@@ -152,6 +152,10 @@ public class EmployeeAction extends ActionBase {
             if (errors.size() > 0) {
                 //登録中にエラーがあった場合
 
+                List<DepartmentView> departments = departmentService.getAllDep();
+                List<StoreView> stores = storeService.getAllStore();
+                putRequestScope(AttributeConst.STORES, stores);//取得した店舗リスト
+                putRequestScope(AttributeConst.DEPARTMENTS,departments);//取得した部署リスト
                 putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
                 putRequestScope(AttributeConst.EMPLOYEE, ev); //入力された従業員情報
                 putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
@@ -320,9 +324,14 @@ public class EmployeeAction extends ActionBase {
             if (errors.size() > 0) {
                 //更新中にエラーが発生した場合
 
+                List<DepartmentView> departments = departmentService.getAllDep();
+                List<StoreView> stores = storeService.getAllStore();
+
                 putRequestScope(AttributeConst.TOKEN, getTokenId()); //CSRF対策用トークン
                 putRequestScope(AttributeConst.EMPLOYEE, ev); //入力された従業員情報
                 putRequestScope(AttributeConst.ERR, errors); //エラーのリスト
+                putRequestScope(AttributeConst.STORES, stores);//取得した店舗リスト
+                putRequestScope(AttributeConst.DEPARTMENTS,departments);//取得した部署リスト
 
                 //編集画面を再表示
                 forward(ForwardConst.FW_EMP_EDIT);

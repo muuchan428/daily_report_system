@@ -316,7 +316,11 @@ public class EmployeeService extends ServiceBase {
         em.getTransaction().commit();
 
     }
-
+/**
+ * 姓または名を条件に従業員データを取得し、返却する
+ * @param name
+ * @return 検索キーワードと部分一致する従業員データ　一致するものがなければnull
+ */
     private List<EmployeeView> searchName(String name){
         List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_SEARCH_NAME, Employee.class)
                                             .setParameter(JpaConst.JPQL_PARM_EMPLOYEE, "%" + name + "%")
@@ -330,7 +334,11 @@ public class EmployeeService extends ServiceBase {
             return null;
         }
     }
-
+    /**
+     * 姓,名を条件に従業員データを取得し、返却する
+     * @param name
+     * @return 検索キーワードと部分一致する従業員データ　一致するものがなければnull
+     */
     private List<EmployeeView> searchName(String lastName, String firstName){
         List<Employee> employees = em.createNamedQuery(JpaConst.Q_EMP_GET_SEARCH_FULL_NAME, Employee.class)
                                             .setParameter(JpaConst.JPQL_PARM_L_NAME, "%" +lastName + "%")

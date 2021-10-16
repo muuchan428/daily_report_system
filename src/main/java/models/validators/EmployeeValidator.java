@@ -3,7 +3,9 @@ package models.validators;
 import java.util.ArrayList;
 import java.util.List;
 
+import actions.views.DepartmentView;
 import actions.views.EmployeeView;
+import actions.views.StoreView;
 import constants.MessageConst;
 import services.EmployeeService;
 
@@ -45,6 +47,16 @@ public class EmployeeValidator {
         String passError = validatePassword(ev.getPassword(), passwordCheckFlag);
         if (!passError.equals("")) {
             errors.add(passError);
+        }
+        //部署のチェック
+        String depError = validateDepartment(ev.getDepartment());
+        if(!depError.equals("")) {
+            errors.add(depError);
+        }
+        //店舗のチェック
+        String storeError = validateStore(ev.getStore());
+        if(!storeError.equals("")) {
+            errors.add(storeError);
         }
 
         return errors;
@@ -120,5 +132,19 @@ public class EmployeeValidator {
 
         //エラーがない場合は空文字を返却
         return "";
+    }
+
+    private static String validateDepartment(DepartmentView department) {
+        if(department == null) {
+            return MessageConst.E_NODEPARTMENT.getMessage();
+        }
+        return "";
+     }
+
+    private static String validateStore(StoreView store) {
+       if(store == null) {
+           return MessageConst.E_NOSTORE.getMessage();
+       }
+       return "";
     }
 }

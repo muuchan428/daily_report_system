@@ -40,14 +40,17 @@
 
 <label for="${AttributeConst.EMP_DEP.getValue()}">部署</label><br />
 <select name="${AttributeConst.EMP_DEP.getValue()}">
+<option value="${department.id}" selected > --部署を選択--</option>
 <c:forEach var="department"  items="${departments}">
     <option value="${department.id}"<c:if test="${employee.department.id == department.id}">selected </c:if>>${department.name}</option>
 </c:forEach>
+
 </select>
 <br /><br />
 
 <label for="${AttributeConst.EMP_STO.getValue()}">店舗</label><br />
 <select name="${AttributeConst.EMP_STO.getValue()}">
+<option value="${department.id}" selected > --店舗を選択--</option>
 <c:forEach var="store"  items="${stores}">
     <option value="${store.id}"<c:if test="${employee.store.id == store.id}">selected</c:if>>${store.name}</option>
 </c:forEach>

@@ -29,6 +29,8 @@ public enum MessageConst {
     E_DEP_CODE_EXIST("入力された部署番号の情報は既に存在しています。"),
     E_NOSTO_CODE("店舗番号を入力してください。"),
     E_STO_CODE_EXIST("入力された店舗番号の情報は既に存在しています。"),
+    E_NODEPARTMENT("部署を選択してください。"),
+    E_NOSTORE("店舗を選択してください。"),
     E_NOSTO_NAME("店舗名を入力してください。"),
     E_NODEP_NAME("部署名を入力してください。"),
     E_NOT_DELETE_DEP_STO("従業員が所属しているため削除できません。");
